@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>StopBullying — EEMTI Nazaré Guerra | Ceará Científico 2026</title>
+  
+  <meta name="description" content="Aplicativo PWA para denúncia anônima, apoio emocional, triagem por semáforo, quiz educativo e socorro emergencial com GPS. Projeto científico da EEMTI Nazaré Guerra (Itatira/CE).">
+  <meta name="theme-color" content="#0D2B45">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/jpeg" href="Stop Bullying.jpeg">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- GLOW BACKGROUND EFFECT -->
+  <div class="bg-glow"></div>
+
+  <!-- CONTROL BAR (DISPOSITIVO / MODOS DE EXIBIÇÃO) -->
+  <div class="app-mode-bar">
+    <div class="brand-badge">
+      <img src="Stop Bullying.jpeg" alt="Logo StopBullying">
+      <span>StopBullying <small style="font-size: 0.7rem; color: #1A7FC1;">Ceará Científico 2026</small></span>
+    </div>
+    <div class="view-toggle-btns">
+      <button class="toggle-btn active" id="btn-toggle-phone">📱 Modo Celular</button>
+      <button class="toggle-btn" id="btn-toggle-desktop">🖥️ Modo Tela Cheia</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER (FRAME DO SMARTPHONE) -->
+  <main class="main-wrapper">
+    <div class="phone-frame">
+      <div class="phone-screen">
+
+        <!-- STATUS BAR DO CELULAR -->
+        <div class="phone-status-bar">
+          <span>09:41</span>
+          <div class="status-net">
+            <span class="dot-status" id="net-status-dot"></span>
+            <span id="net-status-text">Online (Supabase)</span>
+          </div>
+          <span>🔋 100%</span>
+        </div>
+
+        <!-- APP HERO HEADER (MARCA OFICIAL STOP BULLYING) -->
+        <header class="app-header-hero">
+          <img src="Stop Bullying 2.jpeg" alt="Banner Oficial Stop Bullying" class="app-brand-banner">
+          <h1 class="app-title-main">Stop<span>Bullying</span></h1>
+          <p class="app-subtitle-main">Sua voz contra o bullying e a violência escolar</p>
+          <span class="school-tag">EEMTI Nazaré Guerra • Itatira/CE</span>
+        </header>
+
+        <!-- BANNER DE INSTALAÇÃO PWA DINÂMICO -->
+        <div id="pwa-install-container" class="pwa-install-banner" style="display: none;">
+          <div>
+            <strong style="font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 6px;">📲 Instalar aplicativo</strong>
+            <p style="font-size: 0.72rem; color: #E3F2FD;">Adicione à tela de início para usar offline</p>
+          </div>
+          <button id="btn-pwa-install" class="pwa-install-btn">Instalar Agora</button>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- MÓDULO 1: TELA INICIAL (MENU PRINCIPAL) -->
+        <!-- ==================================================== -->
+        <section id="view-home" class="module-view active">
+          <div class="menu-grid">
+            
+            <a href="#" class="menu-card-btn btn-red" data-target-view="denuncia">
+              <div class="btn-icon-box">📢</div>
+              <div class="btn-content">
+                <div class="btn-title">Fazer uma Denúncia</div>
+                <div class="btn-desc">100% Anônima e protegida com protocolo</div>
+              </div>
+              <span class="btn-arrow">›</span>
+            </a>
+
+            <a href="#" class="menu-card-btn btn-green" data-target-view="apoio">
+              <div class="btn-icon-box">💚</div>
+              <div class="btn-content">
+                <div class="btn-title">Apoio Emocional</div>
+                <div class="btn-desc">Respiração guiada 4-7-8 e ajuda psicológica</div>
+              </div>
+              <span class="btn-arrow">›</span>
+            </a>
+
+            <a href="#" class="menu-card-btn btn-yellow" data-target-view="triagem">
+              <div class="btn-icon-box">🚦</div>
+              <div class="btn-content">
+                <div class="btn-title">Triagem de Caso</div>
+                <div class="btn-desc">Semáforo de gravidade: Verde, Amarelo e Vermelho</div>
+              </div>
+              <span class="btn-arrow">›</span>
+            </a>
+
+            <a href="#" class="menu-card-btn btn-blue" data-target-view="quiz">
+              <div class="btn-icon-box">📚</div>
+              <div class="btn-content">
+                <div class="btn-title">Quiz & Estatísticas</div>
+                <div class="btn-desc">Teste seus conhecimentos e veja dados do INEP</div>
+              </div>
+              <span class="btn-arrow">›</span>
+            </a>
+
+            <a href="#" class="menu-card-btn btn-sos" data-target-view="sos">
+              <div class="btn-icon-box">🚨</div>
+              <div class="btn-content">
+                <div class="btn-title">Socorro Emergencial (SOS)</div>
+                <div class="btn-desc">1 Toque + GPS Automático + Modo Camuflagem</div>
+              </div>
+              <span class="btn-arrow">›</span>
+            </a>
+
+            <a href="#" class="menu-card-btn" style="background: rgba(26,127,193,0.15); border-color: #1A7FC1;" data-target-view="ceara">
+              <div class="btn-icon-box">🔬</div>
+              <div class="btn-content">
+                <div class="btn-title" style="color: #90CAF9;">Central Ceará Científico</div>
+                <div class="btn-desc">Banner oficial 90x120cm e dados da pesquisa</div>
+              </div>
+              <span class="btn-arrow">›</span>
+            </a>
+
+          </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- MÓDULO 2: DENÚNCIA ANÔNIMA -->
+        <!-- ==================================================== -->
+        <section id="view-denuncia" class="module-view">
+          <div class="view-header">
+            <button class="back-btn" data-target-view="home">←</button>
+            <div class="view-title-group">
+              <h2>Denúncia Anônima</h2>
+              <p>Sua identidade está 100% protegida</p>
+            </div>
+          </div>
+
+          <div class="privacy-notice">
+            <span>🔒</span>
+            <span>Nenhum dado pessoal, IP ou e-mail é coletado nesta denúncia.</span>
+          </div>
+
+          <div id="denuncia-form-container">
+            <form id="form-denuncia-anonima">
+              <div class="form-group">
+                <label class="form-label" for="denuncia-tipo">Tipo de Violência</label>
+                <select id="denuncia-tipo" class="form-select" required>
+                  <option value="">Selecionar tipo...</option>
+                  <option value="Verbal">Verbal (Xingamentos, piadas, ofensas)</option>
+                  <option value="Física">Física (Empurrões, agressões, danos a objetos)</option>
+                  <option value="Psicológica">Psicológica / Moral (Ameaças, chantagem)</option>
+                  <option value="Cyberbullying">Cyberbullying (Redes sociais, grupos de mensagens)</option>
+                  <option value="Social">Social / Relacional (Exclusão forçada, fofocas)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="denuncia-local">Onde Aconteceu?</label>
+                <select id="denuncia-local" class="form-select" required>
+                  <option value="">Selecionar local...</option>
+                  <option value="Sala de Aula">Sala de Aula</option>
+                  <option value="Pátio/Recreio">Pátio / Área de Convivência</option>
+                  <option value="Corredor/Escada">Corredor ou Escadaria</option>
+                  <option value="Banheiro">Banheiro Escolar</option>
+                  <option value="Transporte Escolar">Transporte Escolar (Ônibus)</option>
+                  <option value="Entorno da Escola">Entorno / Portão da Escola</option>
+                  <option value="Redes Sociais">Redes Sociais / WhatsApp</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="denuncia-descricao">Descreva o que aconteceu</label>
+                <textarea id="denuncia-descricao" class="form-textarea" placeholder="Descreva a situação com o máximo de detalhes sem se identificar..." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="denuncia-link">Link ou Evidência Digital (Opcional)</label>
+                <input type="url" id="denuncia-link" class="form-input" placeholder="https://instagram.com/post_ou_mensagem">
+              </div>
+
+              <button type="submit" class="primary-action-btn">ENVIAR DENÚNCIA ANÔNIMA</button>
+            </form>
+          </div>
+
+          <!-- CONFIRMAÇÃO DE ENVIO -->
+          <div id="denuncia-sucesso-container" style="display: none; text-align: center; padding: 20px 0;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
+            <h3 style="color: #2ECC71; font-weight: 800; font-size: 1.3rem;">Denúncia Registrada com Sucesso!</h3>
+            <p style="font-size: 0.85rem; color: #CFD8DC; margin: 10px 0;">Guarde o seu protocolo anônimo para acompanhamento:</p>
+            
+            <div style="background: rgba(0,0,0,0.5); border: 2px dashed #2ECC71; padding: 14px; border-radius: 12px; margin: 16px 0;">
+              <span style="font-size: 0.75rem; color: #9CA3AF;">PROTOCOLO DE ACOMPANHAMENTO</span>
+              <div id="protocolo-gerado-hash" style="font-family: monospace; font-size: 1.5rem; font-weight: 900; color: #F1C40F; letter-spacing: 2px;">STP-89F2A</div>
+              <span id="protocolo-modo-envio" style="font-size: 0.7rem; color: #A9DFBF;">🟢 Registrado no Supabase</span>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;">
+              <button id="btn-copiar-protocolo" class="speech-btn" style="background: #27ae60; border-color: #2ecc71; color: #fff; padding: 8px 14px;">📋 Copiar Código</button>
+              <button id="btn-baixar-comprovante" class="speech-btn" style="background: #2980b9; border-color: #3498db; color: #fff; padding: 8px 14px;">📥 Baixar Comprovante (.txt)</button>
+            </div>
+
+            <button class="primary-action-btn" style="background: #1A7FC1;" data-target-view="home">Voltar ao Menu Principal</button>
+          </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- MÓDULO 3: TRIAGEM DE CASO (SEMÁFORO) -->
+        <!-- ==================================================== -->
+        <section id="view-triagem" class="module-view">
+          <div class="view-header">
+            <button class="back-btn" data-target-view="home">←</button>
+            <div class="view-title-group">
+              <h2>Triagem de Caso</h2>
+              <p>Semáforo de gravidade e recomendação de encaminhamento</p>
+            </div>
+          </div>
+
+          <p style="font-size: 0.85rem; color: #CFD8DC; margin-bottom: 14px;">Selecione abaixo o nível que melhor descreve o caso para ver a orientação imediata da escola:</p>
+
+          <div class="semaforo-container">
+            <div class="semaforo-card sc-verde" data-nivel="verde">
+              <div class="sc-dot"></div>
+              <div>
+                <strong style="color: #2ECC71; font-size: 0.95rem;">Caso Leve / Pontual</strong>
+                <p style="font-size: 0.78rem; color: #CFD8DC;">Atrito esporádico sem agressão física ou perseguição.</p>
+              </div>
+            </div>
+
+            <div class="semaforo-card sc-amarelo" data-nivel="amarelo">
+              <div class="sc-dot"></div>
+              <div>
+                <strong style="color: #F1C40F; font-size: 0.95rem;">Caso Recorrente / Sistemático</strong>
+                <p style="font-size: 0.78rem; color: #CFD8DC;">Humilhações frequentes, isolamento forçado ou cyberbullying.</p>
+              </div>
+            </div>
+
+            <div class="semaforo-card sc-vermelho" data-nivel="vermelho">
+              <div class="sc-dot"></div>
+              <div>
+                <strong style="color: #E74C3C; font-size: 0.95rem;">Caso Grave / Ameaça Física</strong>
+                <p style="font-size: 0.78rem; color: #CFD8DC;">Agressão física, ameaças sérias ou extorsão com risco imediato.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="triagem-resultado"></div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- MÓDULO 4: APOIO EMOCIONAL & SAÚDE MENTAL -->
+        <!-- ==================================================== -->
+        <section id="view-apoio" class="module-view">
+          <div class="view-header">
+            <button class="back-btn" data-target-view="home">←</button>
+            <div class="view-title-group">
+              <h2>Apoio Emocional</h2>
+              <p>Sua saúde mental é nossa prioridade</p>
+            </div>
+          </div>
+
+          <!-- CARD MOTIVACIONAL -->
+          <div style="background: rgba(30,132,73,0.15); border: 1px solid rgba(30,132,73,0.4); border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 16px;">
+            <span style="font-size: 2rem;">💬</span>
+            <p id="frase-motivacional-texto" style="font-size: 0.9rem; font-style: italic; color: #A9DFBF; margin: 10px 0;">"Você é forte e merece respeito. Pedir ajuda é um ato de coragem."</p>
+            <div style="display: flex; gap: 8px; justify-content: center; margin-top: 8px;">
+              <button id="btn-nova-frase" style="background: transparent; border: 1px solid #2ECC71; color: #2ECC71; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; cursor: pointer;">✨ Nova Mensagem</button>
+              <button id="btn-ler-frase-voz" class="speech-btn">🔊 Ouvir Mensagem</button>
+            </div>
+          </div>
+
+          <!-- WIDGET RESPIRAÇÃO GUIADA (4-7-8) -->
+          <div class="breath-widget">
+            <h4 style="font-size: 0.9rem; color: #90CAF9; font-weight: 700;">Exercício de Respiração Guiada (4-7-8)</h4>
+            <p style="font-size: 0.75rem; color: #CFD8DC;">Acalme a mente e diminua a ansiedade antes de tomar uma decisão.</p>
+            <div class="breath-circle" id="breath-circle-element">Respira</div>
+            <span id="breath-state-label" style="font-size: 0.85rem; font-weight: 700; color: #F1C40F;">Pronto para começar</span>
+            <div style="display: flex; gap: 8px; justify-content: center; width: 100%; margin-top: 14px;">
+              <button id="btn-start-breath" class="primary-action-btn" style="background: #1A7FC1; flex: 1;">▶️ Iniciar Respiração</button>
+              <button id="btn-toggle-breath-sound" class="speech-btn" style="background: #34495e; border-color: #7f8c8d; color: #fff; padding: 0 14px;">🔊 Som</button>
+            </div>
+          </div>
+
+          <!-- CONTATOS DE EMERGÊNCIA 24h -->
+          <div style="margin-top: 10px;">
+            <h4 style="font-size: 0.85rem; text-transform: uppercase; color: #9CA3AF; margin-bottom: 8px;">Canais Gratuitos de Ajuda 24h:</h4>
+            <a href="tel:188" style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; color: #fff; text-decoration: none; margin-bottom: 8px;">
+              <span>📞 CVV - Centro de Valorização da Vida</span>
+              <strong style="color: #2ECC71;">Ligar 188</strong>
+            </a>
+            <a href="tel:100" style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; color: #fff; text-decoration: none;">
+              <span>🛡️ Disque Direitos Humanos</span>
+              <strong style="color: #3498DB;">Ligar 100</strong>
+            </a>
+          </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- MÓDULO 5: QUIZ EDUCATIVO & ESTATÍSTICAS -->
+        <!-- ==================================================== -->
+        <section id="view-quiz" class="module-view">
+          <div class="view-header">
+            <button class="back-btn" data-target-view="home">←</button>
+            <div class="view-title-group">
+              <h2>Quiz & Estatísticas</h2>
+              <p>Conhecimento sobre a Lei 13.185/2015 e INEP</p>
+            </div>
+          </div>
+
+          <!-- CONTAINER DO QUIZ -->
+          <div id="quiz-container"></div>
+
+          <!-- CARD ESTATÍSTICO DO INEP -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-top: 16px;">
+            <h4 style="font-size: 0.9rem; color: #90CAF9; margin-bottom: 8px;">📈 Dados Oficiais do INEP (2019)</h4>
+            <div style="background: rgba(211,47,47,0.2); border-left: 4px solid var(--red-primary); padding: 10px; border-radius: 4px; font-size: 0.8rem; color: #CFD8DC;">
+              <strong>Mais de 28% dos estudantes brasileiros</strong> relatam já ter sofrido algum tipo de bullying ou intimidação sistemática na escola.
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- MÓDULO 6: BOTÃO DE PÂNICO SOS & GPS -->
+        <!-- ==================================================== -->
+        <section id="view-sos" class="module-view">
+          <div class="view-header">
+            <button class="back-btn" data-target-view="home">←</button>
+            <div class="view-title-group">
+              <h2>Socorro Emergencial (SOS)</h2>
+              <p>Acionamento direto com localização por GPS</p>
+            </div>
+          </div>
+
+          <div style="text-align: center; padding: 10px 0;">
+            <button id="btn-trigger-sos" class="primary-action-btn" style="height: 120px; border-radius: 50%; width: 120px; margin: 0 auto; font-size: 1.8rem; background: radial-gradient(circle, #E74C3C, #C0392B); animation: pulse 1.5s infinite; border: 4px solid #fff;">
+              🚨<br><span style="font-size: 0.8rem;">SOCORRO</span>
+            </button>
+            <p style="font-size: 0.75rem; color: #9CA3AF; margin-top: 12px;">Toque no botão vermelho acima para enviar sua localização GPS exata e alertar a coordenação escolar.</p>
+          </div>
+
+          <div id="sos-status-box" style="display: none; margin-top: 14px;"></div>
+
+          <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 16px;">
+            <button id="btn-camuflagem-toggle" class="primary-action-btn" style="background: #374151; font-size: 0.85rem;">
+              📱 Ativar Tela Discreta (Calculadora Camuflada)
+            </button>
+            <p style="font-size: 0.7rem; color: #9CA3AF; text-align: center; margin-top: 6px;">Transforma o app em uma calculadora comum caso alguém esteja por perto.</p>
+          </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- MÓDULO 7: CENTRAL CEARÁ CIENTÍFICO 2026 -->
+        <!-- ==================================================== -->
+        <section id="view-ceara" class="module-view">
+          <div class="view-header">
+            <button class="back-btn" data-target-view="home">←</button>
+            <div class="view-title-group">
+              <h2>Ceará Científico 2026</h2>
+              <p>EEMTI Nazaré Guerra — Itatira/CE</p>
+            </div>
+          </div>
+
+          <p style="font-size: 0.8rem; color: #CFD8DC; margin-bottom: 12px;">Visualizador interativo do Banner Oficial da Feira Científica (90 × 120 cm):</p>
+
+          <iframe src="banner_stopbullying_ceara_cientifico_2026.html" class="banner-viewer-modal"></iframe>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================================================== -->
+  <!-- MODAL CAMUFLAGEM (CALCULADORA NEUTRA DISCRETA) -->
+  <!-- ==================================================== -->
+  <div id="modal-camuflagem" class="camouflaged-modal">
+    <div style="color: #666; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">Calculadora Padrão</div>
+    <div id="calc-display" class="calc-screen">0</div>
+    <div class="calc-grid">
+      <button class="calc-btn">C</button>
+      <button class="calc-btn">÷</button>
+      <button class="calc-btn">×</button>
+      <button class="calc-btn op">-</button>
+      
+      <button class="calc-btn">7</button>
+      <button class="calc-btn">8</button>
+      <button class="calc-btn">9</button>
+      <button class="calc-btn op">+</button>
+
+      <button class="calc-btn">4</button>
+      <button class="calc-btn">5</button>
+      <button class="calc-btn">6</button>
+      <button class="calc-btn op">=</button>
+
+      <button class="calc-btn">1</button>
+      <button class="calc-btn">2</button>
+      <button class="calc-btn">3</button>
+      <button class="calc-btn">0</button>
+
+      <button class="calc-btn exit">SAIR DA TELA DISCRETA</button>
+    </div>
+  </div>
+
+  <!-- SCRIPTS DA APLICAÇÃO -->
+  <script src="supabase_client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "StopBullying — EEMTI Nazaré Guerra",
+  "short_name": "StopBullying",
+  "description": "Aplicativo mobile para denúncia anônima, apoio emocional, triagem por semáforo e prevenção ao bullying escolar.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111827",
+  "theme_color": "#0D2B45",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./Stop Bullying 3.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./Stop Bullying.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "🚨 Socorro Rápido",
+      "short_name": "SOS",
+      "description": "Disparar alerta emergencial com GPS",
+      "url": "./index.html#sos",
+      "icons": [{ "src": "./Stop Bullying 3.jpeg", "sizes": "192x192" }]
+    },
+    {
+      "name": "📢 Denúncia Anônima",
+      "short_name": "Denúncia",
+      "description": "Fazer denúncia sem se identificar",
+      "url": "./index.html#denuncia",
+      "icons": [{ "src": "./Stop Bullying.jpeg", "sizes": "192x192" }]
+    }
+  ]
+}
