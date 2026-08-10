@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // === ESTADO GLOBAL DA APLICAÇÃO ===
   const state = {
     viewAtual: 'home',
-    modoDesktop: false,
     quizScore: 0,
     quizIndex: 0,
     breathTimer: null,
@@ -16,6 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     deferredPrompt: null,
     ultimoProtocolo: 'STP-89F2A'
   };
+
+  // === ATALHO SECRETO PARA A GESTÃO ESCOLAR (Ctrl + Shift + G) ===
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'G' || e.key === 'g')) {
+      e.preventDefault();
+      window.open('gestaoequipestop.html', '_blank');
+    }
+  });
 
   // BANCO DE FRASES MOTIVACIONAIS
   const frasesMotivacionais = [
@@ -26,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     "Denunciar o bullying é proteger você e todos os seus colegas."
   ];
 
-  // BANCO DE QUESTÕES DO QUIZ (GOOGLE FORMS INEP / LEI 13.185)
+  // BANCO DE QUESTÕES DO QUIZ (LEI 13.185/2015 & INEP)
   const quizQuestoes = [
     {
       pergunta: "1. O que caracteriza legalmente o bullying segundo a Lei nº 13.185/2015?",
@@ -127,13 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
     targetView.classList.add('active');
     state.viewAtual = viewId;
 
-    // Rolar ao topo no simulador
-    const screen = document.querySelector('.phone-screen');
-    if (screen) screen.scrollTop = 0;
+    // Atualizar classe active nos botões da navbar
+    document.querySelectorAll('.nav-link[data-target-view]').forEach(link => {
+      if (link.getAttribute('data-target-view') === viewId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
 
-    if (viewId === 'gestao') {
-      carregarDashboardGestao();
-    }
+    // Rolar ao topo da página
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Log anônimo de navegação
     if (window.supabaseService) {
@@ -141,27 +152,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // === ATALHOS DE BOTÕES DE VOLTAR E LINKS ===
+  // === ATALHOS DE BOTÕES DE NAVEGAÇÃO ===
   document.querySelectorAll('[data-target-view]').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      e.preventDefault();
       const target = btn.getAttribute('data-target-view');
-      navegarPara(target);
+      if (target) {
+        e.preventDefault();
+        navegarPara(target);
+      }
     });
   });
 
-  // === BOTÃO TOGGLE MODO DESKTOP / MOBILE ===
-  const btnToggleView = document.getElementById('btn-toggle-desktop');
-  if (btnToggleView) {
-    btnToggleView.addEventListener('click', () => {
-      state.modoDesktop = !state.modoDesktop;
-      document.body.classList.toggle('desktop-view', state.modoDesktop);
-      btnToggleView.textContent = state.modoDesktop ? '📱 Modo Celular' : '🖥️ Modo Tela Cheia';
-      btnToggleView.classList.toggle('active', state.modoDesktop);
-    });
-  }
-
-  // === DENÚNCIA ANÔNIMA (GERADOR DE PROTOCOLO) ===
+  // === DENÚNCIA ANÔNIMA (GERADOR DE PROTOCOLO HASH) ===
   const formDenuncia = document.getElementById('form-denuncia-anonima');
   if (formDenuncia) {
     formDenuncia.addEventListener('submit', async (e) => {
@@ -239,30 +241,35 @@ Guarde este protocolo para acompanhamento anônimo.
       let html = '';
       if (nivel === 'verde') {
         html = `
-          <div style="background: rgba(30,132,73,0.2); border:1px solid #2ECC71; padding:16px; border-radius:12px; margin-top:14px;">
-            <h3 style="color:#2ECC71; font-weight:800; font-size:1.1rem; margin-bottom:6px;">🟢 Caso Leve / Conflito Pontual</h3>
-            <p style="font-size:0.85rem; color:#CFD8DC;">Situação isolada sem violência física. Recomendamos conversar com um professor de confiança ou com a Mediação Escolar.</p>
-            <button class="primary-action-btn" style="margin-top:10px; background:#1E8449;" onclick="document.querySelector('[data-target-view=apoio]').click()">Acessar Apoio Emocional</button>
+          <div style="background: rgba(16, 185, 129, 0.15); border:1.5px solid #10B981; padding:20px; border-radius:var(--radius-lg); margin-top:20px; animation: fadeIn 0.3s ease;">
+            <h3 style="color:#10B981; font-family:var(--font-display); font-weight:800; font-size:1.2rem; margin-bottom:8px;">🟢 Caso Leve / Conflito Pontual</h3>
+            <p style="font-size:0.9rem; color:#CFD8DC;">Situação isolada sem violência física nem intimidação sistemática. Recomendamos conversar com um professor de confiança ou com a Mediação Escolar.</p>
+            <button class="primary-action-btn" style="margin-top:14px; background:#10B981; max-width: 300px;" data-target-view="apoio">Acessar Apoio Emocional</button>
           </div>
         `;
       } else if (nivel === 'amarelo') {
         html = `
-          <div style="background: rgba(214,137,16,0.2); border:1px solid #F1C40F; padding:16px; border-radius:12px; margin-top:14px;">
-            <h3 style="color:#F1C40F; font-weight:800; font-size:1.1rem; margin-bottom:6px;">🟡 Caso Recorrente / Perseguição</h3>
-            <p style="font-size:0.85rem; color:#CFD8DC;">Violência psicológica repetida ou exclusão sistemática. Envolva a Coordenação Pedagógica e a Família imediatamente.</p>
-            <button class="primary-action-btn" style="margin-top:10px; background:#D68910;" onclick="document.querySelector('[data-target-view=denuncia]').click()">Fazer Denúncia Anônima</button>
+          <div style="background: rgba(245, 158, 11, 0.15); border:1.5px solid #F59E0B; padding:20px; border-radius:var(--radius-lg); margin-top:20px; animation: fadeIn 0.3s ease;">
+            <h3 style="color:#F59E0B; font-family:var(--font-display); font-weight:800; font-size:1.2rem; margin-bottom:8px;">🟡 Caso Recorrente / Perseguição</h3>
+            <p style="font-size:0.9rem; color:#CFD8DC;">Violência psicológica repetida ou exclusão sistemática. Envolva a Coordenação Pedagógica e a Família imediatamente.</p>
+            <button class="primary-action-btn" style="margin-top:14px; background:#F59E0B; max-width: 300px;" data-target-view="denuncia">Fazer Denúncia Anônima</button>
           </div>
         `;
       } else if (nivel === 'vermelho') {
         html = `
-          <div style="background: rgba(211,47,47,0.2); border:1px solid #E74C3C; padding:16px; border-radius:12px; margin-top:14px;">
-            <h3 style="color:#E74C3C; font-weight:800; font-size:1.1rem; margin-bottom:6px;">🔴 Caso Grave / Urgente</h3>
-            <p style="font-size:0.85rem; color:#CFD8DC;">Agressão física ou situação de risco iminente. Acione a Direção Escolar, Conselho Tutelar ou o Botão SOS de Emergência!</p>
-            <button class="primary-action-btn" style="margin-top:10px; background:#C0392B;" onclick="document.querySelector('[data-target-view=sos]').click()">🚨 Acionar SOS com GPS Agora</button>
+          <div style="background: rgba(239, 68, 68, 0.15); border:1.5px solid #EF4444; padding:20px; border-radius:var(--radius-lg); margin-top:20px; animation: fadeIn 0.3s ease;">
+            <h3 style="color:#EF4444; font-family:var(--font-display); font-weight:800; font-size:1.2rem; margin-bottom:8px;">🔴 Caso Grave / Urgente</h3>
+            <p style="font-size:0.9rem; color:#CFD8DC;">Agressão física ou situação de risco iminente. Acione a Direção Escolar, Conselho Tutelar ou o Botão SOS de Emergência!</p>
+            <button class="primary-action-btn" style="margin-top:14px; background:#EF4444; max-width: 340px;" data-target-view="sos">🚨 Acionar SOS com GPS Agora</button>
           </div>
         `;
       }
       containerResult.innerHTML = html;
+
+      // Re-bind listeners on dynamically inserted buttons
+      containerResult.querySelectorAll('[data-target-view]').forEach(b => {
+        b.addEventListener('click', () => navegarPara(b.getAttribute('data-target-view')));
+      });
 
       if (window.supabaseService) {
         window.supabaseService.registrarTriagem({ nivel_calculado: nivel });
@@ -296,7 +303,7 @@ Guarde este protocolo para acompanhamento anônimo.
   if (btnToggleBreathSound) {
     btnToggleBreathSound.addEventListener('click', () => {
       state.breathSound = !state.breathSound;
-      btnToggleBreathSound.textContent = state.breathSound ? '🔊 Som' : '🔇 Mudo';
+      btnToggleBreathSound.textContent = state.breathSound ? '🔊 Som: LIGADO' : '🔇 Som: MUTADO';
     });
   }
 
@@ -316,7 +323,7 @@ Guarde este protocolo para acompanhamento anônimo.
 
       const ciclo = () => {
         if (fase === 0) {
-          labelBreath.textContent = 'Inhale suavemente... (4s)';
+          labelBreath.textContent = 'Inhale suavemente pelo nariz... (4s)';
           circleBreath.className = 'breath-circle inhale';
           tocarSomBreath(440, 2000); // Tom La (Inspirar)
           fase = 1;
@@ -326,7 +333,7 @@ Guarde este protocolo para acompanhamento anônimo.
           tocarSomBreath(523.25, 1000); // Tom Do (Reter)
           fase = 2;
         } else {
-          labelBreath.textContent = 'Solte o ar bem devagar... (8s)';
+          labelBreath.textContent = 'Solte o ar bem devagar pela boca... (8s)';
           circleBreath.className = 'breath-circle exhale';
           tocarSomBreath(329.63, 3000); // Tom Mi (Expirar)
           fase = 0;
@@ -345,11 +352,11 @@ Guarde este protocolo para acompanhamento anônimo.
 
     if (index >= quizQuestoes.length) {
       container.innerHTML = `
-        <div style="text-align:center; padding:20px;">
-          <h3 style="font-size:1.4rem; font-weight:800; color:#2ECC71;">🎉 Quiz Concluído!</h3>
-          <p style="margin:10px 0; font-size:1rem;">Você acertou <strong>${state.quizScore} de ${quizQuestoes.length}</strong> questões!</p>
-          <p style="font-size:0.8rem; color:#9CA3AF;">Obrigado por fortalecer a Convivência Democrática e a Prevenção ao Bullying na EEMTI Nazaré Guerra.</p>
-          <button class="primary-action-btn" style="margin-top:16px; background:#1A7FC1;" onclick="location.reload()">Refazer Quiz</button>
+        <div style="text-align:center; padding:30px 20px; background:var(--bg-card); border-radius:var(--radius-lg); border:1px solid var(--border-glass);">
+          <h3 style="font-size:1.6rem; font-family:var(--font-display); font-weight:800; color:#10B981;">🎉 Quiz Concluído!</h3>
+          <p style="margin:12px 0; font-size:1.1rem; color:#fff;">Você acertou <strong style="color:#F59E0B;">${state.quizScore} de ${quizQuestoes.length}</strong> questões!</p>
+          <p style="font-size:0.88rem; color:#9CA3AF; max-width:500px; margin:0 auto;">Obrigado por fortalecer a Convivência Democrática e a Prevenção ao Bullying na EEMTI Nazaré Guerra.</p>
+          <button class="primary-action-btn" style="margin-top:20px; background:var(--blue-scientific); max-width:240px; margin-left:auto; margin-right:auto;" onclick="location.reload()">Refazer Quiz</button>
         </div>
       `;
       return;
@@ -363,12 +370,12 @@ Guarde este protocolo para acompanhamento anônimo.
 
     container.innerHTML = `
       <div class="quiz-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <h4 style="font-size:0.95rem; font-weight:700;">${q.pergunta}</h4>
-          <button id="btn-ouvir-quiz-${index}" class="speech-btn" style="padding:2px 8px; font-size:0.7rem;">🔊</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px;">
+          <h4 style="font-size:1.05rem; font-weight:700; color:#fff;">${q.pergunta}</h4>
+          <button id="btn-ouvir-quiz-${index}" class="speech-btn" style="padding:4px 10px; font-size:0.75rem;">🔊 Ouvir</button>
         </div>
         <div>${htmlOptions}</div>
-        <div id="quiz-feedback" style="margin-top:12px; display:none; padding:10px; border-radius:8px; font-size:0.8rem;"></div>
+        <div id="quiz-feedback" style="margin-top:14px; display:none; padding:14px; border-radius:var(--radius-md); font-size:0.88rem;"></div>
       </div>
     `;
 
@@ -387,14 +394,16 @@ Guarde este protocolo para acompanhamento anônimo.
 
         if (selected === q.correta) {
           btn.classList.add('correct');
-          feedback.style.background = 'rgba(30,132,73,0.3)';
-          feedback.style.color = '#A9DFBF';
+          feedback.style.background = 'rgba(16, 185, 129, 0.25)';
+          feedback.style.border = '1px solid #10B981';
+          feedback.style.color = '#A7F3D0';
           feedback.innerHTML = `✅ ${q.explicacao}`;
           state.quizScore++;
         } else {
           btn.classList.add('wrong');
-          feedback.style.background = 'rgba(211,47,47,0.3)';
-          feedback.style.color = '#FADADD';
+          feedback.style.background = 'rgba(239, 68, 68, 0.25)';
+          feedback.style.border = '1px solid #EF4444';
+          feedback.style.color = '#FCA5A5';
           feedback.innerHTML = `❌ Resposta incorreta. ${q.explicacao}`;
         }
 
@@ -408,71 +417,13 @@ Guarde este protocolo para acompanhamento anônimo.
 
   carregarQuestaoQuiz(0);
 
-  // === MÓDULO 8: PAINEL DE GESTÃO ESCOLAR ===
-  async function carregarDashboardGestao() {
-    let denuncias = [];
-    if (window.supabaseService) {
-      denuncias = await window.supabaseService.listarDenuncias();
-    }
-
-    // Fallback de dados mock/locais para a apresentação na feira
-    if (!denuncias || denuncias.length === 0) {
-      denuncias = [
-        { protocolo: 'STP-94A1F', tipo_violencia: 'Cyberbullying', local_escola: 'Redes Sociais', status: 'Em Análise' },
-        { protocolo: 'STP-88C2B', tipo_violencia: 'Verbal', local_escola: 'Sala de Aula', status: 'Acolhido' },
-        { protocolo: 'STP-71E9D', tipo_violencia: 'Física', local_escola: 'Pátio/Recreio', status: 'Resolvido' },
-        { protocolo: 'STP-63F4A', tipo_violencia: 'Psicológica', local_escola: 'Corredor', status: 'Em Análise' }
-      ];
-    }
-
-    document.getElementById('metric-total-denuncias').textContent = denuncias.length + 5;
-    document.getElementById('metric-casos-graves').textContent = '2';
-    document.getElementById('metric-casos-leves').textContent = '7';
-    document.getElementById('metric-quizzes-concluidos').textContent = '48';
-
-    const tbody = document.getElementById('dashboard-table-body');
-    if (tbody) {
-      let rows = '';
-      denuncias.forEach(d => {
-        const badgeClass = d.status === 'Resolvido' ? 'status-resolvido' : (d.status === 'Acolhido' ? 'status-em-atendimento' : 'status-pendente');
-        rows += `
-          <tr>
-            <td><strong style="color:#F1C40F; font-family:monospace;">${d.protocolo}</strong></td>
-            <td>${d.tipo_violencia || 'Geral'}</td>
-            <td>${d.local_escola || 'Escola'}</td>
-            <td><span class="status-badge ${badgeClass}">${d.status || 'Em Análise'}</span></td>
-          </tr>
-        `;
-      });
-      tbody.innerHTML = rows;
-    }
-  }
-
-  // EXPORTAR CSV DA GESTÃO ESCOLAR
-  const btnExportCSV = document.getElementById('btn-export-csv');
-  if (btnExportCSV) {
-    btnExportCSV.addEventListener('click', () => {
-      const csvData = `Protocolo;Tipo;Local;Status;Data
-STP-94A1F;Cyberbullying;Redes Sociais;Em Análise;2026-08-09
-STP-88C2B;Verbal;Sala de Aula;Acolhido;2026-08-08
-STP-71E9D;Física;Pátio/Recreio;Resolvido;2026-08-07
-STP-63F4A;Psicológica;Corredor;Em Análise;2026-08-06`;
-
-      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `Relatorio_Gestao_StopBullying_EEMTI_NazareGuerra.csv`;
-      a.click();
-    });
-  }
-
   // === BOTÃO SOS EMERGÊNCIAL & GPS + CAMUFLAGEM ===
   const btnTriggerSOS = document.getElementById('btn-trigger-sos');
   if (btnTriggerSOS) {
     btnTriggerSOS.addEventListener('click', () => {
       const statusBox = document.getElementById('sos-status-box');
       statusBox.style.display = 'block';
-      statusBox.innerHTML = '<p>⏳ Obtendo localização GPS de emergência...</p>';
+      statusBox.innerHTML = '<p style="color:#F59E0B; text-align:center;">⏳ Obtendo localização GPS de emergência...</p>';
 
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -492,62 +443,266 @@ STP-63F4A;Psicológica;Corredor;Em Análise;2026-08-06`;
             const res = await window.supabaseService.enviarAlertaSOS(sosData);
             
             statusBox.innerHTML = `
-              <div style="background:rgba(211,47,47,0.25); border:1px solid #E74C3C; padding:14px; border-radius:10px; margin-top:10px;">
-                <h4 style="color:#E74C3C; font-weight:800;">🚨 ALERTA SOS ENVIADO COM SUCESSO!</h4>
-                <p style="font-size:0.8rem; margin:6px 0;">Sua localização exata foi registrada:</p>
-                <p style="font-size:0.75rem; font-family:monospace; color:#FFF;">Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)} (Precisão: ${accuracy.toFixed(0)}m)</p>
-                <p style="font-size:0.75rem; color:#A9DFBF; margin-top:6px;">Modo: ${res.modo === 'online' ? '🟢 Enviado ao Supabase' : '⚡ Armazenado Offline'}</p>
-                <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" style="display:inline-block; margin-top:8px; color:#3498DB; font-weight:700; font-size:0.8rem;">📍 Abrir Mapa com Localização</a>
+              <div style="background:rgba(239, 68, 68, 0.2); border:1.5px solid #EF4444; padding:20px; border-radius:var(--radius-lg); margin-top:14px; text-align:center;">
+                <h4 style="color:#EF4444; font-family:var(--font-display); font-weight:800; font-size:1.2rem;">🚨 ALERTA SOS TRANSMITIDO COM SUCESSO!</h4>
+                <p style="font-size:0.9rem; margin:8px 0; color:#CFD8DC;">Sua localização exata foi transmitida à coordenação escolar:</p>
+                <p style="font-size:0.85rem; font-family:monospace; color:#FFF; background:rgba(0,0,0,0.5); padding:8px; border-radius:6px; display:inline-block;">Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)} (Precisão: ${accuracy.toFixed(0)}m)</p>
+                <p style="font-size:0.8rem; color:#A7F3D0; margin-top:8px;">Modo: ${res.modo === 'online' ? '🟢 Gravado no Supabase' : '⚡ Armazenado Offline'}</p>
+                <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" class="speech-btn" style="margin-top:12px; background:#3B82F6; color:#fff; text-decoration:none;">📍 Abrir no Mapa GPS</a>
               </div>
             `;
           },
           (err) => {
-            statusBox.innerHTML = `<p style="color:#E74C3C;">⚠️ Não foi possível obter o GPS: ${err.message}. Mas o alerta SOS geral foi enviado à coordenação.</p>`;
+            statusBox.innerHTML = `<p style="color:#EF4444; text-align:center;">⚠️ Não foi possível obter o GPS: ${err.message}. Mas o alerta SOS geral foi transmitido à coordenação.</p>`;
             window.supabaseService.enviarAlertaSOS({ dispositivo_info: navigator.userAgent });
           },
           { enableHighAccuracy: true, timeout: 10000 }
         );
       } else {
-        statusBox.innerHTML = '<p style="color:#E74C3C;">⚠️ GPS não suportado neste navegador. Alerta SOS geral enviado.</p>';
+        statusBox.innerHTML = '<p style="color:#EF4444; text-align:center;">⚠️ GPS não suportado neste navegador. Alerta SOS geral enviado.</p>';
       }
     });
   }
 
-  // MODAL CAMUFLAGEM (CALCULADORA NEUTRA)
+  // === MODAL CAMUFLAGEM (MINI GAME PAC-MAN RETRO) ===
   const btnToggleCamouflage = document.getElementById('btn-camuflagem-toggle');
   const modalCamouflage = document.getElementById('modal-camuflagem');
-  const calcScreen = document.getElementById('calc-display');
+  const btnExitCamouflage = document.getElementById('btn-exit-camouflage');
+  const canvas = document.getElementById('pacman-canvas');
+  const scoreDisplay = document.getElementById('pacman-score');
 
-  if (btnToggleCamouflage && modalCamouflage) {
-    btnToggleCamouflage.addEventListener('click', () => {
-      modalCamouflage.classList.add('active');
-    });
+  let pacGameLoop = null;
 
-    document.querySelectorAll('.calc-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const val = btn.textContent;
-        if (btn.classList.contains('exit')) {
-          modalCamouflage.classList.remove('active');
-          calcScreen.textContent = '0';
-          return;
+  if (btnToggleCamouflage && modalCamouflage && canvas) {
+    const ctx = canvas.getContext('2d');
+    const tileSize = 24;
+    const gridCols = 15;
+    const gridRows = 15;
+
+    // Mapa Inicial (1=Parede, 0=Dot, 2=Vazio)
+    const initialMap = [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+      [1,0,1,1,0,1,1,0,1,1,0,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,0,1,0,1],
+      [1,0,0,0,1,1,2,1,1,0,0,0,0,0,1],
+      [1,1,1,0,1,2,2,2,1,0,1,1,1,0,1],
+      [1,0,0,0,1,2,2,2,1,0,0,0,0,0,1],
+      [1,0,1,0,1,1,1,1,1,0,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,0,1,0,1,0,1],
+      [1,0,1,1,0,1,1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,0,1,0,1,1,1,1,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+      [1,1,1,0,0,0,1,0,0,0,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ];
+
+    let gameMap = JSON.parse(JSON.stringify(initialMap));
+    let score = 0;
+    let chompMouth = 0.2;
+    let chompDir = 0.03;
+
+    // Jogador Pac-Man
+    let pacman = { x: 1, y: 1, dx: 0, dy: 0, nextDx: 0, nextDy: 0 };
+
+    // Fantasmas (Blinky e Pinky)
+    let ghosts = [
+      { x: 7, y: 6, dx: 1, dy: 0, color: '#EF4444' },
+      { x: 7, y: 5, dx: -1, dy: 0, color: '#EC4899' }
+    ];
+
+    function resetPacGame() {
+      gameMap = JSON.parse(JSON.stringify(initialMap));
+      score = 0;
+      pacman = { x: 1, y: 1, dx: 0, dy: 0, nextDx: 0, nextDy: 0 };
+      ghosts = [
+        { x: 7, y: 6, dx: 1, dy: 0, color: '#EF4444' },
+        { x: 7, y: 5, dx: -1, dy: 0, color: '#EC4899' }
+      ];
+      if (scoreDisplay) scoreDisplay.textContent = '0000';
+    }
+
+    function canMoveTo(x, y) {
+      if (x < 0 || x >= gridCols || y < 0 || y >= gridRows) return false;
+      return gameMap[y][x] !== 1;
+    }
+
+    function updatePacman() {
+      if (pacman.nextDx !== 0 || pacman.nextDy !== 0) {
+        if (canMoveTo(pacman.x + pacman.nextDx, pacman.y + pacman.nextDy)) {
+          pacman.dx = pacman.nextDx;
+          pacman.dy = pacman.nextDy;
+          pacman.nextDx = 0;
+          pacman.nextDy = 0;
         }
-        if (val === 'C') {
-          calcScreen.textContent = '0';
-        } else if (val === '=') {
-          try {
-            calcScreen.textContent = eval(calcScreen.textContent.replace('×', '*').replace('÷', '/'));
-          } catch {
-            calcScreen.textContent = 'Erro';
+      }
+
+      if (canMoveTo(pacman.x + pacman.dx, pacman.y + pacman.dy)) {
+        pacman.x += pacman.dx;
+        pacman.y += pacman.dy;
+
+        if (gameMap[pacman.y][pacman.x] === 0) {
+          gameMap[pacman.y][pacman.x] = 2;
+          score += 10;
+          if (scoreDisplay) {
+            scoreDisplay.textContent = String(score).padStart(4, '0');
           }
-        } else {
-          if (calcScreen.textContent === '0' || calcScreen.textContent === 'Erro') {
-            calcScreen.textContent = val;
+        }
+      }
+
+      chompMouth += chompDir;
+      if (chompMouth >= 0.45 || chompMouth <= 0.05) {
+        chompDir = -chompDir;
+      }
+    }
+
+    function updateGhosts() {
+      ghosts.forEach(g => {
+        const directions = [
+          { dx: 1, dy: 0 }, { dx: -1, dy: 0 },
+          { dx: 0, dy: 1 }, { dx: 0, dy: -1 }
+        ];
+
+        let validDirs = directions.filter(d => canMoveTo(g.x + d.dx, g.y + d.dy));
+        if (validDirs.length > 0) {
+          if (canMoveTo(g.x + g.dx, g.y + g.dy) && Math.random() > 0.4) {
+            g.x += g.dx;
+            g.y += g.dy;
           } else {
-            calcScreen.textContent += val;
+            let choice = validDirs[Math.floor(Math.random() * validDirs.length)];
+            g.dx = choice.dx;
+            g.dy = choice.dy;
+            g.x += g.dx;
+            g.y += g.dy;
           }
         }
       });
+    }
+
+    function drawPacGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let r = 0; r < gridRows; r++) {
+        for (let c = 0; c < gridCols; c++) {
+          const tile = gameMap[r][c];
+          const cx = c * tileSize;
+          const cy = r * tileSize;
+
+          if (tile === 1) {
+            ctx.fillStyle = '#1E3A8A';
+            ctx.fillRect(cx, cy, tileSize, tileSize);
+            ctx.strokeStyle = '#3B82F6';
+            ctx.strokeRect(cx + 2, cy + 2, tileSize - 4, tileSize - 4);
+          } else if (tile === 0) {
+            ctx.fillStyle = '#F59E0B';
+            ctx.beginPath();
+            ctx.arc(cx + tileSize/2, cy + tileSize/2, 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // Desenhar Pac-Man
+      const px = pacman.x * tileSize + tileSize / 2;
+      const py = pacman.y * tileSize + tileSize / 2;
+      let startAngle = 0;
+      if (pacman.dx === 1) startAngle = 0;
+      else if (pacman.dx === -1) startAngle = Math.PI;
+      else if (pacman.dy === 1) startAngle = Math.PI / 2;
+      else if (pacman.dy === -1) startAngle = (3 * Math.PI) / 2;
+
+      ctx.fillStyle = '#FACC15';
+      ctx.beginPath();
+      ctx.arc(
+        px, py, tileSize / 2 - 2,
+        startAngle + chompMouth,
+        startAngle + Math.PI * 2 - chompMouth
+      );
+      ctx.lineTo(px, py);
+      ctx.fill();
+
+      // Desenhar Fantasmas
+      ghosts.forEach(g => {
+        const gx = g.x * tileSize + tileSize / 2;
+        const gy = g.y * tileSize + tileSize / 2;
+
+        ctx.fillStyle = g.color;
+        ctx.beginPath();
+        ctx.arc(gx, gy - 2, tileSize / 2 - 2, Math.PI, 0, false);
+        ctx.lineTo(gx + tileSize / 2 - 2, gy + tileSize / 2);
+        ctx.lineTo(gx - tileSize / 2 + 2, gy + tileSize / 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#FFF';
+        ctx.beginPath();
+        ctx.arc(gx - 4, gy - 4, 3, 0, Math.PI * 2);
+        ctx.arc(gx + 4, gy - 4, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#1E3A8A';
+        ctx.beginPath();
+        ctx.arc(gx - 4 + g.dx * 1.5, gy - 4 + g.dy * 1.5, 1.5, 0, Math.PI * 2);
+        ctx.arc(gx + 4 + g.dx * 1.5, gy - 4 + g.dy * 1.5, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    let moveCounter = 0;
+
+    function gameLoop() {
+      if (!modalCamouflage.classList.contains('active')) return;
+
+      moveCounter++;
+      if (moveCounter % 10 === 0) {
+        updatePacman();
+        updateGhosts();
+      }
+
+      drawPacGame();
+      pacGameLoop = requestAnimationFrame(gameLoop);
+    }
+
+    function setDirection(dx, dy) {
+      pacman.nextDx = dx;
+      pacman.nextDy = dy;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!modalCamouflage.classList.contains('active')) return;
+      if (['ArrowUp', 'KeyW'].includes(e.code)) { setDirection(0, -1); e.preventDefault(); }
+      else if (['ArrowDown', 'KeyS'].includes(e.code)) { setDirection(0, 1); e.preventDefault(); }
+      else if (['ArrowLeft', 'KeyA'].includes(e.code)) { setDirection(-1, 0); e.preventDefault(); }
+      else if (['ArrowRight', 'KeyD'].includes(e.code)) { setDirection(1, 0); e.preventDefault(); }
+      else if (e.code === 'Escape') {
+        modalCamouflage.classList.remove('active');
+        if (pacGameLoop) cancelAnimationFrame(pacGameLoop);
+      }
     });
+
+    const btnUp = document.getElementById('btn-pac-up');
+    const btnDown = document.getElementById('btn-pac-down');
+    const btnLeft = document.getElementById('btn-pac-left');
+    const btnRight = document.getElementById('btn-pac-right');
+
+    if (btnUp) btnUp.addEventListener('click', () => setDirection(0, -1));
+    if (btnDown) btnDown.addEventListener('click', () => setDirection(0, 1));
+    if (btnLeft) btnLeft.addEventListener('click', () => setDirection(-1, 0));
+    if (btnRight) btnRight.addEventListener('click', () => setDirection(1, 0));
+
+    btnToggleCamouflage.addEventListener('click', () => {
+      modalCamouflage.classList.add('active');
+      resetPacGame();
+      if (pacGameLoop) cancelAnimationFrame(pacGameLoop);
+      pacGameLoop = requestAnimationFrame(gameLoop);
+    });
+
+    if (btnExitCamouflage) {
+      btnExitCamouflage.addEventListener('click', () => {
+        modalCamouflage.classList.remove('active');
+        if (pacGameLoop) cancelAnimationFrame(pacGameLoop);
+      });
+    }
   }
 
   // === PROMPT DE INSTALAÇÃO PWA DINÂMICO ===
@@ -574,12 +729,12 @@ STP-63F4A;Psicológica;Corredor;Em Análise;2026-08-06`;
     });
   }
 
-  // CHECAR HASH DA URL PARA ATALHOS PWA (#sos, #denuncia, #gestaoequipestop)
+  // CHECAR HASH DA URL PARA ATALHOS PWA (#sos, #denuncia, #gestao)
   if (window.location.hash === '#sos') {
     navegarPara('sos');
   } else if (window.location.hash === '#denuncia') {
     navegarPara('denuncia');
-  } else if (window.location.hash === '#gestaoequipestop' || window.location.hash === '#gestao') {
+  } else if (window.location.hash === '#gestao') {
     window.location.href = 'gestaoequipestop.html';
   }
 
@@ -594,4 +749,3 @@ STP-63F4A;Psicológica;Corredor;Em Análise;2026-08-06`;
     });
   }
 });
-

@@ -1,424 +1,668 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banner Científico Oficial 90x120cm — StopBullying | Ceará Científico 2026</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800;900&display=swap">
 
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-.banner {
-  background: #0D2B45;
-  width: 100%;
-  font-family: var(--font-sans);
-  padding: 0;
-  overflow: hidden;
-}
-.header {
-  background: #0D2B45;
-  padding: 18px 28px 14px;
-  border-bottom: 3px solid #1A7FC1;
-}
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.logos { display: flex; gap: 10px; align-items: center; }
-.logo-box {
-  background: #fff;
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 11px;
-  font-weight: 500;
-  color: #0D2B45;
-  letter-spacing: 0.3px;
-}
-.logo-box.green { background: #2E7D32; color: #fff; }
-.event-tag {
-  background: #1A7FC1;
-  border-radius: 6px;
-  padding: 4px 12px;
-  font-size: 10px;
-  color: #E3F2FD;
-}
-.qr-banca-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #ffffff;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 2px solid #1A7FC1;
-}
-.qr-banca-box svg {
-  width: 48px;
-  height: 48px;
-}
-.qr-banca-text {
-  font-size: 9px;
-  color: #0D2B45;
-  font-weight: 700;
-  line-height: 1.2;
-}
-.title-block { text-align: center; padding: 4px 0 0; }
-.main-title {
-  font-size: 32px;
-  font-weight: 500;
-  color: #fff;
-  letter-spacing: 1px;
-  line-height: 1.1;
-}
-.main-title span { color: #1A7FC1; }
-.subtitle {
-  font-size: 12px;
-  color: #90CAF9;
-  margin-top: 5px;
-  line-height: 1.5;
-}
-.authors {
-  font-size: 11px;
-  color: #B0BEC5;
-  margin-top: 4px;
-}
-.body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-}
-.col { padding: 16px 18px; }
-.col-left { border-right: 1px solid #1A3A5C; }
-.section-title {
-  font-size: 11px;
-  font-weight: 500;
-  color: #1A7FC1;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #1A3A5C;
-  padding-bottom: 5px;
-  margin-bottom: 10px;
-}
-.text-block {
-  font-size: 11px;
-  color: #CFD8DC;
-  line-height: 1.6;
-  margin-bottom: 12px;
-}
-.text-block strong { color: #fff; font-weight: 500; }
-.obj-list { list-style: none; margin-bottom: 12px; }
-.obj-list li {
-  font-size: 11px;
-  color: #CFD8DC;
-  padding: 3px 0 3px 14px;
-  line-height: 1.5;
-  position: relative;
-}
-.obj-list li::before {
-  content: "›";
-  position: absolute;
-  left: 0;
-  color: #1A7FC1;
-  font-weight: 500;
-}
-.method-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.step {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-.step-num {
-  background: #1A7FC1;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 500;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-.step-text { font-size: 11px; color: #CFD8DC; line-height: 1.5; }
-.phones-row {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin: 12px 0;
-}
-.mini-phone {
-  background: #111827;
-  border-radius: 14px;
-  padding: 4px;
-  width: 72px;
-  box-shadow: 0 0 0 2px #374151;
-}
-.mini-screen {
-  border-radius: 10px;
-  overflow: hidden;
-  height: 110px;
-  display: flex;
-  flex-direction: column;
-}
-.ms-blue { background: #1A5276; }
-.ms-red { background: #C0392B; }
-.ms-green { background: #1E8449; }
-.ms-amber { background: #9A7D0A; }
-.ms-topbar {
-  padding: 4px 5px 3px;
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-}
-.ms-topbar-title { font-size: 8px; font-weight: 500; color: #fff; }
-.ms-body { flex: 1; padding: 4px 5px; display: flex; flex-direction: column; gap: 3px; }
-.ms-btn {
-  border-radius: 4px;
-  padding: 3px 5px;
-  font-size: 7px;
-  color: #fff;
-  font-weight: 500;
-}
-.ms-btn-r { background: #922B21; }
-.ms-btn-g { background: #1E8449; }
-.ms-btn-y { background: #7D6608; }
-.ms-btn-b { background: #1F618D; }
-.ms-field {
-  background: rgba(255,255,255,0.15);
-  border-radius: 3px;
-  padding: 2px 4px;
-  font-size: 7px;
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 1px;
-}
-.ms-badge {
-  background: rgba(0,0,0,0.25);
-  border-radius: 3px;
-  padding: 2px 4px;
-  font-size: 7px;
-  color: #fff;
-  text-align: center;
-}
-.traffic-row { display: flex; gap: 3px; margin-top: 4px; }
-.dot-g { background: #27AE60; border-radius: 50%; width: 16px; height: 16px; }
-.dot-y { background: #F1C40F; border-radius: 50%; width: 16px; height: 16px; }
-.dot-r { background: #E74C3C; border-radius: 50%; width: 16px; height: 16px; }
-.result-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.result-card {
-  border-radius: 8px;
-  padding: 8px 10px;
-}
-.rc-blue { background: #1A3A5C; }
-.rc-green { background: #1A3A2A; }
-.rc-red { background: #3A1A1A; }
-.rc-amber { background: #3A2E0A; }
-.rc-label { font-size: 9px; color: #90CAF9; font-weight: 500; margin-bottom: 3px; }
-.rc-label.green { color: #A5D6A7; }
-.rc-label.red { color: #EF9A9A; }
-.rc-label.amber { color: #FFE082; }
-.rc-text { font-size: 10px; color: #CFD8DC; line-height: 1.4; }
-.ref-list { list-style: none; }
-.ref-list li { font-size: 10px; color: #90A4AE; padding: 2px 0; line-height: 1.4; }
-.footer {
-  background: #1A7FC1;
-  padding: 8px 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.footer-left { font-size: 10px; color: #E3F2FD; }
-.footer-right { font-size: 10px; color: #E3F2FD; text-align: right; }
-.theme-tag {
-  background: rgba(255,255,255,0.2);
-  border-radius: 20px;
-  padding: 3px 12px;
-  font-size: 10px;
-  color: #fff;
-  font-style: italic;
-}
-.phone-label { font-size: 8px; color: #90CAF9; text-align: center; margin-top: 4px; }
-</style>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-<h2 class="sr-only">Banner científico do projeto StopBullying para o Ceará Científico 2026, com introdução, objetivos, metodologia, telas do aplicativo e resultados esperados.</h2>
+    body {
+      background: #090d16;
+      color: #F9FAFB;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-<div class="banner">
-  <div class="header">
-    <div class="header-top">
-      <div class="logos">
-        <div class="logo-box">CEARÁ CIENTÍFICO</div>
-        <div class="logo-box green">SEDUC-CE</div>
-        <div class="logo-box">EEMTI NAZARÉ GUERRA</div>
-      </div>
-      <div style="display: flex; gap: 10px; align-items: center;">
-        <div class="event-tag">Área: Robótica, Automação e TIC &nbsp;|&nbsp; Categoria: Ensino Médio</div>
-        <div class="qr-banca-box">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100" height="100" fill="#ffffff" />
-            <path d="M10 10h30v30H10zM15 15v20h20V15zM20 20h10v10H20zM60 10h30v30H60zM65 15v20h20V15zM70 20h10v10H70zM10 60h30v30H10zM15 65v20h20V65zM20 70h10v10H20zM45 10h10v20H45zM45 35h10v10H45zM10 45h20v10H10zM35 45h20v10H35zM60 45h35v10H60zM45 60h10v35H45zM60 60h15v10H60zM80 60h10v15H80zM60 75h10v20H60zM75 80h20v15H75z" fill="#0D2B45" />
-          </svg>
-          <div class="qr-banca-text">📱 BANCA EXAMINADORA<br><span style="color: #1A7FC1;">Escaneie para testar o PWA ao vivo</span></div>
+    .banner-container {
+      width: 100%;
+      background: #090d16;
+      border: 4px solid #1E3A8A;
+      box-shadow: 0 0 50px rgba(59, 130, 246, 0.2);
+    }
+
+    /* HEADER OFICIAL DO BANNER (90x120cm) */
+    .banner-header {
+      background: linear-gradient(180deg, #0D2B45 0%, #090d16 100%);
+      padding: 24px 32px 20px;
+      border-bottom: 4px solid #3B82F6;
+      position: relative;
+    }
+
+    .header-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .badges-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge-item {
+      background: #ffffff;
+      color: #0D2B45;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-item.green {
+      background: #10B981;
+      color: #090d16;
+    }
+
+    .badge-item.blue {
+      background: #3B82F6;
+      color: #ffffff;
+    }
+
+    .event-info-tag {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93C5FD;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .qr-banca-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 2.5px solid #3B82F6;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .qr-banca-box svg {
+      width: 48px;
+      height: 48px;
+    }
+
+    .qr-banca-text {
+      font-size: 0.75rem;
+      color: #0D2B45;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .title-block {
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .main-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .main-title span {
+      background: linear-gradient(135deg, #EF4444, #F59E0B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .banner-subtitle {
+      font-size: 1rem;
+      color: #93C5FD;
+      margin-top: 6px;
+      font-weight: 500;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .authors-bar {
+      font-size: 0.85rem;
+      color: #CBD5E1;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    .authors-bar strong {
+      color: #F59E0B;
+    }
+
+    /* CORPO DO BANNER (GRID 2 COLUNAS IGUAIS) */
+    .banner-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 24px 32px;
+    }
+
+    .section-card {
+      background: rgba(19, 27, 46, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #3B82F6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .text-block {
+      font-size: 0.88rem;
+      color: #E2E8F0;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .text-block strong {
+      color: #ffffff;
+    }
+
+    .obj-list {
+      list-style: none;
+      margin-bottom: 12px;
+    }
+
+    .obj-list li {
+      font-size: 0.85rem;
+      color: #E2E8F0;
+      padding: 4px 0 4px 18px;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .obj-list li::before {
+      content: "➔";
+      position: absolute;
+      left: 0;
+      color: #10B981;
+      font-size: 0.8rem;
+    }
+
+    .method-steps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .step-card {
+      background: rgba(9, 13, 22, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .step-num-badge {
+      background: #3B82F6;
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    .step-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 0.78rem;
+      color: #94A3B8;
+      line-height: 1.4;
+    }
+
+    /* SHOWCASE DAS TELAS DO SISTEMA (MÓDULOS) */
+    .system-modules-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .module-mini-card {
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mc-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #ffffff;
+    }
+
+    .mc-desc {
+      font-size: 0.78rem;
+      color: #94A3B8;
+      line-height: 1.4;
+    }
+
+    .mc-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+
+    .mc-tag.red { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; }
+    .mc-tag.green { background: rgba(16, 185, 129, 0.2); color: #A7F3D0; }
+    .mc-tag.yellow { background: rgba(245, 158, 11, 0.2); color: #FDE68A; }
+    .mc-tag.blue { background: rgba(59, 130, 246, 0.2); color: #93C5FD; }
+
+    /* MOCKUP VISUAL DAS TELAS */
+    .screens-showcase-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .screen-mockup-box {
+      background: #000;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .sm-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #F59E0B;
+      margin-bottom: 6px;
+    }
+
+    .sm-inner {
+      background: #111827;
+      border-radius: 6px;
+      padding: 8px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    /* RESULTADOS ESPERADOS CARDS */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .result-item-card {
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .rc-blue { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); }
+    .rc-green { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+    .rc-red { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); }
+    .rc-amber { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3); }
+
+    .rc-head { font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; }
+    .rc-blue .rc-head { color: #93C5FD; }
+    .rc-green .rc-head { color: #A7F3D0; }
+    .rc-red .rc-head { color: #FCA5A5; }
+    .rc-amber .rc-head { color: #FDE68A; }
+
+    .rc-text { font-size: 0.78rem; color: #E2E8F0; line-height: 1.4; }
+
+    .ref-list {
+      list-style: none;
+    }
+
+    .ref-list li {
+      font-size: 0.75rem;
+      color: #94A3B8;
+      padding: 2px 0;
+      line-height: 1.4;
+    }
+
+    /* FOOTER DO BANNER */
+    .banner-footer {
+      background: linear-gradient(135deg, #1E3A8A, #0D2B45);
+      border-top: 3px solid #3B82F6;
+      padding: 14px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-text {
+      font-size: 0.8rem;
+      color: #E2E8F0;
+      font-weight: 600;
+    }
+
+    .theme-slogan-tag {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .banner-body {
+        grid-template-columns: 1fr;
+      }
+      .screens-showcase-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="banner-container">
+    
+    <!-- HEADER OFICIAL DO BANNER CIENTÍFICO -->
+    <header class="banner-header">
+      <div class="header-top-row">
+        <div class="badges-group">
+          <div class="badge-item">CEARÁ CIENTÍFICO 2026</div>
+          <div class="badge-item green">SEDUC-CE</div>
+          <div class="badge-item blue">EEMTI NAZARÉ GUERRA</div>
         </div>
-      </div>
-    </div>
-    <div class="title-block">
-      <div class="main-title">Stop<span>Bullying</span></div>
-      <div class="subtitle">Desenvolvimento de aplicativo mobile para denúncia anônima, apoio emocional e prevenção ao bullying escolar</div>
-      <div class="authors">Gabriel Xavier &nbsp;·&nbsp; Carla Vitória &nbsp;|&nbsp; Orientador: Prof. Antonio Victor Batista da Silva &nbsp;|&nbsp; Itatira/CE &nbsp;·&nbsp; 2026</div>
-    </div>
-  </div>
 
-  <div class="body">
-    <div class="col col-left">
-      <div class="section-title">Introdução</div>
-      <div class="text-block">
-        O bullying e o cyberbullying afetam mais de <strong>28% dos estudantes brasileiros</strong> (INEP, 2019), comprometendo a saúde mental, o desempenho escolar e a convivência democrática. A subnotificação dos casos é um dos principais obstáculos ao combate efetivo da violência escolar, frequentemente causada pela ausência de canais seguros e anônimos de denúncia.
-      </div>
-      <div class="text-block">
-        Este projeto propõe o desenvolvimento do <strong>StopBullying</strong>, aplicativo mobile que integra denúncia anônima, triagem por gravidade, apoio emocional e conteúdo educativo — alinhado ao tema do Ceará Científico 2026: <strong>Ciência, Cidadania e Convivência Democrática.</strong>
-      </div>
-
-      <div class="section-title">Objetivos</div>
-      <ul class="obj-list">
-        <li>Mapear a prevalência e tipos de bullying na EEMTI Nazaré Guerra</li>
-        <li>Desenvolver protótipo funcional do app StopBullying</li>
-        <li>Implementar triagem por gravidade (verde/amarelo/vermelho)</li>
-        <li>Integrar canais de apoio psicológico, jurídico e institucional</li>
-        <li>Realizar teste piloto e avaliar impacto na subnotificação</li>
-      </ul>
-
-      <div class="section-title">Metodologia</div>
-      <div class="method-steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text"><strong style="color:#fff">Diagnóstico:</strong> formulário (Google Forms) sobre prevalência, tipos e locais do bullying na escola</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text"><strong style="color:#fff">Desenvolvimento:</strong> plataforma PWA em HTML/CSS/JS com 8 módulos + banco Supabase + cache offline</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text"><strong style="color:#fff">Intervenção:</strong> palestras com psicólogo e advogado sobre prevenção, mediação e saúde emocional</div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-text"><strong style="color:#fff">Teste piloto:</strong> aplicação com turmas + avaliação de usabilidade, mapa GPS SOS e gestão da coordenação</div>
-        </div>
-      </div>
-
-      <div class="section-title">Referências</div>
-      <ul class="ref-list">
-        <li>OLWEUS, D. Bullying at school. Oxford: Blackwell, 1993.</li>
-        <li>FREIRE, P. Pedagogia do Oprimido. 50 ed. Rio de Janeiro: Paz e Terra, 2011.</li>
-        <li>INEP. Resumo Técnico: Censo da Educação Básica 2019. Brasília, 2019.</li>
-        <li>BRASIL. Lei nº 13.185/2015 — Programa de Combate ao Bullying.</li>
-      </ul>
-    </div>
-
-    <div class="col">
-      <div class="section-title">O aplicativo StopBullying (8 Módulos PWA)</div>
-
-      <div class="phones-row">
-        <div>
-          <div class="mini-phone">
-            <div class="mini-screen ms-blue">
-              <div class="ms-topbar"><div class="ms-topbar-title">StopBullying</div></div>
-              <div class="ms-body">
-                <div class="ms-btn ms-btn-r">Fazer Denúncia</div>
-                <div class="ms-btn ms-btn-g">Apoio Emocional</div>
-                <div class="ms-btn ms-btn-y">Triagem Semáforo</div>
-                <div class="ms-btn ms-btn-b">Painel Gestão</div>
-              </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span class="event-info-tag">Área: Robótica, Automação e TIC &nbsp;|&nbsp; Ensino Médio</span>
+          
+          <div class="qr-banca-box">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="#ffffff" />
+              <path d="M10 10h30v30H10zM15 15v20h20V15zM20 20h10v10H20zM60 10h30v30H60zM65 15v20h20V15zM70 20h10v10H70zM10 60h30v30H10zM15 65v20h20V65zM20 70h10v10H20zM45 10h10v20H45zM45 35h10v10H45zM10 45h20v10H10zM35 45h20v10H35zM60 45h35v10H60zM45 60h10v35H45zM60 60h15v10H60zM80 60h10v15H80zM60 75h10v20H60zM75 80h20v15H75z" fill="#0D2B45" />
+            </svg>
+            <div class="qr-banca-text">
+              📱 BANCA EXAMINADORA<br>
+              <span style="color: #3B82F6;">Escaneie para testar o PWA ao vivo</span>
             </div>
           </div>
-          <div class="phone-label">Menu principal</div>
         </div>
-        <div>
-          <div class="mini-phone">
-            <div class="mini-screen ms-red">
-              <div class="ms-topbar"><div class="ms-topbar-title">Denúncia Anônima</div></div>
-              <div class="ms-body">
-                <div class="ms-badge">Identity Hash</div>
-                <div class="ms-field">Tipo violência ▾</div>
-                <div class="ms-field">Local na escola ▾</div>
-                <div class="ms-field">Protocolo STP-89</div>
-                <div class="ms-btn ms-btn-r" style="text-align:center;margin-top:2px">ENVIAR</div>
-              </div>
+      </div>
+
+      <div class="title-block">
+        <h1 class="main-title">Stop<span>Bullying</span></h1>
+        <p class="banner-subtitle">Desenvolvimento de plataforma PWA responsiva para denúncia anônima, triagem por semáforo, apoio emocional e prevenção ao bullying escolar</p>
+        <div class="authors-bar">
+          Estudantes: <strong>Gabriel Xavier</strong> &amp; <strong>Carla Vitória</strong> &nbsp;·&nbsp; Orientador: <strong>Prof. Antonio Victor Batista da Silva</strong> &nbsp;|&nbsp; Itatira/CE • 2026
+        </div>
+      </div>
+    </header>
+
+    <!-- CORPO DO BANNER (METODOLOGIA E SISTEMA) -->
+    <div class="banner-body">
+      
+      <!-- COLUNA ESQUERDA: FUNDAMENTAÇÃO E METODOLOGIA -->
+      <div>
+        
+        <!-- INTRODUÇÃO -->
+        <div class="section-card">
+          <h2 class="section-title">📌 Introdução e Problematização</h2>
+          <p class="text-block">
+            O bullying e o cyberbullying atingem mais de <strong>28% dos estudantes brasileiros</strong> (INEP, 2019), causando sérios danos à saúde mental, ao rendimento escolar e ao clima acadêmico. A subnotificação é o principal obstáculo no combate à violência nas escolas, decorrente do medo de retaliação e da ausência de canais 100% anônimos e seguros.
+          </p>
+          <p class="text-block">
+            O projeto <strong>StopBullying</strong> propõe uma solução tecnológica de cidadania e proteção de direitos alinhada ao tema oficial do Ceará Científico 2026: <strong>Ciência, Cidadania e Convivência Democrática.</strong>
+          </p>
+        </div>
+
+        <!-- OBJETIVOS -->
+        <div class="section-card">
+          <h2 class="section-title">🎯 Objetivos do Projeto</h2>
+          <ul class="obj-list">
+            <li>Mapear a ocorrência e os tipos de bullying na EEMTI Nazaré Guerra</li>
+            <li>Desenvolver plataforma PWA com 8 módulos + banco Supabase + cache offline</li>
+            <li>Implementar triagem por gravidade de risco (Semáforo Verde, Amarelo e Vermelho)</li>
+            <li>Integrar sintetizador de voz, exercício de respiração 4-7-8 e tela discreta de camuflagem</li>
+            <li>Avaliar o impacto na redução da subnotificação e na mediação de conflitos</li>
+          </ul>
+        </div>
+
+        <!-- METODOLOGIA -->
+        <div class="section-card">
+          <h2 class="section-title">⚙️ Metodologia Científica (4 Etapas)</h2>
+          <div class="method-steps-grid">
+            <div class="step-card">
+              <span class="step-num-badge">Etapa 1</span>
+              <div class="step-title">Diagnóstico Escolar</div>
+              <div class="step-desc">Aplicação de formulário (Google Forms) sobre prevalência e tipos de bullying na escola.</div>
+            </div>
+
+            <div class="step-card">
+              <span class="step-num-badge">Etapa 2</span>
+              <div class="step-title">Desenvolvimento PWA</div>
+              <div class="step-desc">Construção da arquitetura em HTML/CSS/JS, Supabase REST API e Service Worker offline.</div>
+            </div>
+
+            <div class="step-card">
+              <span class="step-num-badge">Etapa 3</span>
+              <div class="step-title">Saúde Emocional</div>
+              <div class="step-desc">Integração de exercício 4-7-8 com sintetizador sonoro e mensagens por voz de incentivo.</div>
+            </div>
+
+            <div class="step-card">
+              <span class="step-num-badge">Etapa 4</span>
+              <div class="step-title">Teste Piloto & GPS</div>
+              <div class="step-desc">Aplicação com as turmas, teste de disparo de SOS GPS e validação do painel gerencial.</div>
             </div>
           </div>
-          <div class="phone-label">Denúncia anônima</div>
         </div>
-        <div>
-          <div class="mini-phone">
-            <div class="mini-screen ms-green">
-              <div class="ms-topbar"><div class="ms-topbar-title">Triagem & SOS</div></div>
-              <div class="ms-body" style="align-items:center;justify-content:center;gap:4px">
-                <div style="font-size:8px;color:rgba(255,255,255,0.8);text-align:center">Semáforo & GPS</div>
-                <div class="traffic-row" style="justify-content:center">
-                  <div class="dot-g"></div>
-                  <div class="dot-y"></div>
-                  <div class="dot-r"></div>
+
+        <!-- REFERÊNCIAS -->
+        <div class="section-card">
+          <h2 class="section-title">📚 Referências Bibliográficas</h2>
+          <ul class="ref-list">
+            <li>OLWEUS, D. Bullying at school: What we know and what we can do. Oxford: Blackwell, 1993.</li>
+            <li>FREIRE, P. Pedagogia do Oprimido. 50. ed. Rio de Janeiro: Paz e Terra, 2011.</li>
+            <li>INEP. Resumo Técnico: Censo da Educação Básica 2019. Brasília: INEP, 2019.</li>
+            <li>BRASIL. Lei nº 13.185/2015 — Institui o Programa de Combate à Intimidação Sistemática.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- COLUNA DIREITA: MÓDULOS E TELAS DO SISTEMA -->
+      <div>
+        
+        <!-- MÓDULOS DO SISTEMA -->
+        <div class="section-card">
+          <h2 class="section-title">📱 Arquitetura e Módulos do Sistema PWA</h2>
+          
+          <div class="system-modules-grid">
+            <div class="module-mini-card">
+              <div class="mc-header">📢 Denúncia Anônima</div>
+              <div class="mc-desc">Formulário encriptado sem coleta de IP ou e-mail com emissão de protocolo hash.</div>
+              <span class="mc-tag red">🔒 100% Anônimo</span>
+            </div>
+
+            <div class="module-mini-card">
+              <div class="mc-header">🚦 Triagem Semáforo</div>
+              <div class="mc-desc">Classificação por gravidade (Leve, Recorrente, Grave) e encaminhamento rápido.</div>
+              <span class="mc-tag yellow">🟢 🟡 🔴 Semáforo</span>
+            </div>
+
+            <div class="module-mini-card">
+              <div class="mc-header">💚 Apoio Emocional</div>
+              <div class="mc-desc">Respiração guiada 4-7-8 com sintetizador de áudio + voz sintetizada + CVV 188.</div>
+              <span class="mc-tag green">🔊 Web Audio API</span>
+            </div>
+
+            <div class="module-mini-card">
+              <div class="mc-header">📚 Quiz &amp; INEP</div>
+              <div class="mc-desc">Conscientização sobre a Lei 13.185/2015 e dados estatísticos do Censo Escolar.</div>
+              <span class="mc-tag blue">🧠 Educativo</span>
+            </div>
+
+            <div class="module-mini-card">
+              <div class="mc-header">🚨 SOS GPS &amp; Pânico</div>
+              <div class="mc-desc">Transmissão instantânea de latitude/longitude com precisão em metros à coordenação.</div>
+              <span class="mc-tag red">📍 Geolocalização</span>
+            </div>
+
+            <div class="module-mini-card">
+              <div class="mc-header">🎮 Pac-Man Camuflado</div>
+              <div class="mc-desc">Tela discreta com Mini Game Arcade funcional para privacidade em emergências.</div>
+              <span class="mc-tag yellow">👾 Arcade Discreto</span>
+            </div>
+          </div>
+
+          <!-- SHOWCASE VISUAL DAS TELAS -->
+          <div class="screens-showcase-row">
+            <div class="screen-mockup-box">
+              <div class="sm-title">Denúncia Anônima</div>
+              <div class="sm-inner">
+                <span style="font-size:1.2rem;">📢</span>
+                <span style="font-size:0.65rem; color:#A7F3D0; font-family:monospace;">STP-89F2A</span>
+                <span style="font-size:0.6rem; color:#94A3B8;">Hash Protegido</span>
+              </div>
+            </div>
+
+            <div class="screen-mockup-box">
+              <div class="sm-title">Triagem Semáforo</div>
+              <div class="sm-inner">
+                <div style="display:flex; gap:4px;">
+                  <span style="width:10px;height:10px;border-radius:50%;background:#10B981;"></span>
+                  <span style="width:10px;height:10px;border-radius:50%;background:#F59E0B;"></span>
+                  <span style="width:10px;height:10px;border-radius:50%;background:#EF4444;"></span>
                 </div>
-                <div class="ms-btn ms-btn-r" style="font-size:6px; margin-top:2px;">🚨 SOS + GPS</div>
+                <span style="font-size:0.65rem; color:#FFF;">Triagem de Risco</span>
+              </div>
+            </div>
+
+            <div class="screen-mockup-box">
+              <div class="sm-title">Apoio Emocional</div>
+              <div class="sm-inner">
+                <div style="width:24px;height:24px;border-radius:50%;background:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;">4-7-8</div>
+                <span style="font-size:0.6rem; color:#93C5FD;">Respiração Guiada</span>
+              </div>
+            </div>
+
+            <div class="screen-mockup-box">
+              <div class="sm-title">SOS GPS &amp; Pac-Man</div>
+              <div class="sm-inner">
+                <span style="font-size:1rem;">🚨 👾</span>
+                <span style="font-size:0.6rem; color:#FCA5A5;">Alerta + Disfarce</span>
               </div>
             </div>
           </div>
-          <div class="phone-label">Semáforo & SOS GPS</div>
         </div>
-        <div>
-          <div class="mini-phone">
-            <div class="mini-screen ms-amber">
-              <div class="ms-topbar"><div class="ms-topbar-title">Apoio & Gestão</div></div>
-              <div class="ms-body">
-                <div class="ms-badge" style="font-style:italic">Respiração 4-7-8</div>
-                <div class="ms-btn ms-btn-g" style="margin-top:2px">💬 Voz & Áudio</div>
-                <div class="ms-btn ms-btn-b" style="margin-top:2px">📊 Painel Gestão</div>
-                <div class="ms-btn ms-btn-r" style="margin-top:2px">🔢 Camuflagem</div>
-              </div>
+
+        <!-- RESULTADOS ESPERADOS -->
+        <div class="section-card">
+          <h2 class="section-title">📊 Resultados Esperados e Impacto Social</h2>
+          
+          <div class="results-grid">
+            <div class="result-item-card rc-blue">
+              <div class="rc-head">Mapeamento da Violência</div>
+              <div class="rc-text">Identificação precisa dos tipos e locais de ocorrência do bullying na escola com estatísticas em tempo real.</div>
+            </div>
+
+            <div class="result-item-card rc-green">
+              <div class="rc-head">Plataforma PWA Completa</div>
+              <div class="rc-text">Aplicação responsiva com 8 módulos operacionais, integração Supabase e suporte 100% offline.</div>
+            </div>
+
+            <div class="result-item-card rc-red">
+              <div class="rc-head">Queda na Subnotificação</div>
+              <div class="rc-text">Estímulo ao protagonismo estudantil para denúncia segura com anonimato absoluto e código hash.</div>
+            </div>
+
+            <div class="result-item-card rc-amber">
+              <div class="rc-head">Convivência Democrática</div>
+              <div class="rc-text">Fortalecimento da rede de proteção escolar, acolhimento emocional e replicação na rede estadual.</div>
             </div>
           </div>
-          <div class="phone-label">Apoio & Gestão</div>
         </div>
+
+        <!-- CONSIDERAÇÕES FINAIS -->
+        <div class="section-card">
+          <h2 class="section-title">💡 Considerações Finais</h2>
+          <p class="text-block">
+            O <strong>StopBullying</strong> demonstra o potencial da tecnologia como instrumento de <strong>cidadania, direitos humanos e convivência democrática</strong>. Integrando protagonismo jovem, educação científica, banco de dados Supabase e responsabilidade social — pilares do Ceará Científico 2026 —, o projeto apresenta uma solução concreta, gratuita e acessível para o ambiente escolar público.
+          </p>
+        </div>
+
       </div>
 
-      <div class="section-title">Resultados esperados</div>
-      <div class="result-grid">
-        <div class="result-card rc-blue">
-          <div class="rc-label">Diagnóstico</div>
-          <div class="rc-text">Mapeamento da prevalência e tipos de bullying na escola com análise estatística</div>
-        </div>
-        <div class="result-card rc-green">
-          <div class="rc-label green">Plataforma PWA Completa</div>
-          <div class="rc-text">App testado com turmas, com 8 módulos operacionais, Supabase e suporte offline</div>
-        </div>
-        <div class="result-card rc-red">
-          <div class="rc-label red">Redução da subnotificação</div>
-          <div class="rc-text">Aumento na disposição dos estudantes de denunciar casos de bullying com 100% de anonimato</div>
-        </div>
-        <div class="result-card rc-amber">
-          <div class="rc-label amber">Impacto social e Gestão</div>
-          <div class="rc-text">Fortalecimento da rede de apoio escolar, painel da coordenação e convivência democrática</div>
-        </div>
-      </div>
-
-      <div class="section-title">Considerações finais</div>
-      <div class="text-block">
-        O StopBullying demonstra como a tecnologia pode ser instrumento de <strong>cidadania, proteção de direitos e convivência democrática</strong> no contexto escolar. O projeto integra protagonismo estudantil, educação científica, banco de dados Supabase e responsabilidade social — pilares do Ceará Científico 2026. Com potencial de replicação em toda a rede estadual, representa uma solução concreta, gratuita e acessível para um problema urgente nas escolas públicas do Ceará.
-      </div>
     </div>
+
+    <!-- FOOTER DO BANNER -->
+    <footer class="banner-footer">
+      <div class="footer-text">
+        EEMTI Nazaré Guerra &nbsp;·&nbsp; Itatira/CE &nbsp;·&nbsp; Robótica, Automação e TIC
+      </div>
+      <div class="theme-slogan-tag">
+        Ciência, Cidadania e Convivência Democrática: o conhecimento a serviço da vida coletiva
+      </div>
+      <div class="footer-text">
+        Ceará Científico 2026 &nbsp;·&nbsp; Banner 90 × 120 cm
+      </div>
+    </footer>
+
   </div>
 
-  <div class="footer">
-    <div class="footer-left">
-      EEMTI Nazaré Guerra &nbsp;·&nbsp; Lagoa do Mato, Itatira/CE &nbsp;·&nbsp; Biologia
-    </div>
-    <div class="theme-tag">Ciência, Cidadania e Convivência Democrática: o conhecimento a serviço da vida coletiva</div>
-    <div class="footer-right">
-      Ceará Científico 2026 &nbsp;·&nbsp; 90 × 120 cm
-    </div>
-  </div>
-</div>
+</body>
+</html>

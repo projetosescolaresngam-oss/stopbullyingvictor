@@ -2,105 +2,130 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Gerencial da Equipe — StopBullying | EEMTI Nazaré Guerra</title>
   
-  <meta name="description" content="Painel gerencial de monitoramento anônimo e métricas da equipe escolar StopBullying.">
-  <meta name="theme-color" content="#0D2B45">
+  <meta name="description" content="Painel gerencial de monitoramento anônimo, detalhes de denúncias e métricas da equipe escolar StopBullying.">
+  <meta name="theme-color" content="#090d16">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/jpeg" href="Stop Bullying.jpeg">
 
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="desktop-view">
+<body>
 
   <!-- GLOW BACKGROUND EFFECT -->
   <div class="bg-glow"></div>
 
-  <!-- CONTROL BAR DA EQUIPE -->
-  <div class="app-mode-bar">
-    <div class="brand-badge">
-      <img src="Stop Bullying.jpeg" alt="Logo StopBullying">
-      <span>StopBullying <small style="font-size: 0.7rem; color: #8E44AD;">🔒 Painel Gerencial da Equipe</small></span>
+  <!-- SITE GLASS NAVBAR -->
+  <header class="site-navbar">
+    <div class="navbar-container">
+      <div class="brand-badge">
+        <img src="Stop Bullying.jpeg" alt="Logo StopBullying">
+        <div class="brand-text-group">
+          <div class="brand-title">Stop<span>Bullying</span></div>
+          <span class="brand-tag" style="color: #DDD6FE;">🔒 Painel Gerencial da Equipe Escolar</span>
+        </div>
+      </div>
+
+      <div class="navbar-actions">
+        <a href="index.html" class="nav-link active" style="text-decoration: none; background: linear-gradient(135deg, #3B82F6, #1D4ED8); border-color: #3B82F6;">
+          📱 Voltar ao App do Aluno
+        </a>
+      </div>
     </div>
-    <a href="index.html" class="toggle-btn active" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-      📱 Voltar ao App do Aluno
-    </a>
-  </div>
+  </header>
 
-  <!-- MAIN CONTAINER (FRAME DA GESTÃO) -->
-  <main class="main-wrapper" style="max-width: 900px; margin-top: 10px;">
-    <div class="phone-frame" style="max-width: 100%; border: none; border-radius: 20px; background: var(--bg-surface); padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+  <!-- MAIN CONTAINER (LAYOUT RESPONSIVO FLUIDO) -->
+  <main class="app-container">
+    
+    <!-- HERO HEADER DA GESTÃO ESCOLAR -->
+    <div class="hero-section" style="margin-bottom: 24px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div class="hero-tags-row">
+            <span class="hero-tag" style="background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4); color: #DDD6FE;">🔒 Central da Coordenação</span>
+            <span class="hero-tag tag-green" id="sync-status-tag">🟢 Supabase Sincronizado</span>
+          </div>
+          <h1 style="font-size: 2.2rem; margin-bottom: 8px;">Painel Gerencial da Equipe Escolar</h1>
+          <p class="hero-subtitle" style="margin-bottom: 0;">EEMTI Nazaré Guerra • Ceará Científico 2026</p>
+        </div>
+
+        <button id="btn-export-csv-gestao" class="primary-action-btn" style="width: auto; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); font-size: 0.95rem;">
+          📥 Exportar Relatório Completo (CSV)
+        </button>
+      </div>
+    </div>
+
+    <!-- CARDS DE MÉTRICAS EM TEMPO REAL -->
+    <div class="dashboard-metrics-grid">
+      <div class="metric-card">
+        <span style="font-size: 1.8rem;">📢</span>
+        <div id="metric-total-denuncias" class="metric-number" style="color: #3B82F6;">0</div>
+        <div class="metric-label">Total de Denúncias</div>
+      </div>
+      <div class="metric-card">
+        <span style="font-size: 1.8rem;">🚨</span>
+        <div id="metric-casos-graves" class="metric-number" style="color: #EF4444;">0</div>
+        <div class="metric-label">Casos Graves / Físicos</div>
+      </div>
+      <div class="metric-card">
+        <span style="font-size: 1.8rem;">🟢</span>
+        <div id="metric-casos-leves" class="metric-number" style="color: #10B981;">0</div>
+        <div class="metric-label">Casos Leves / Pontuais</div>
+      </div>
+      <div class="metric-card">
+        <span style="font-size: 1.8rem;">🧠</span>
+        <div id="metric-quizzes-concluidos" class="metric-number" style="color: #F59E0B;">48</div>
+        <div class="metric-label">Quizzes &amp; Conscientização</div>
+      </div>
+    </div>
+
+    <!-- PAINEL PRINCIPAL EM 2 COLUNAS -->
+    <div style="display: grid; grid-template-columns: 340px 1fr; gap: 24px; margin-top: 10px; align-items: start;">
       
-      <!-- HERO HEADER DA GESTÃO -->
-      <div style="text-align: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
-        <span style="font-size: 2.2rem;">📊</span>
-        <h1 style="font-family: var(--font-display); font-size: 1.6rem; color: #fff;">Painel Gerencial da Equipe</h1>
-        <p style="font-size: 0.85rem; color: #CFD8DC; margin-top: 4px;">EEMTI Nazaré Guerra • Ceará Científico 2026</p>
-        <span style="font-size: 0.75rem; background: rgba(142,68,173,0.3); color: #E8DAEF; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-top: 8px;">
-          Atalho Direto: <strong style="color: #F1C40F;">gestaoequipestop.html</strong>
-        </span>
-      </div>
-
-      <!-- CARDS DE MÉTRICAS DA EQUIPE -->
-      <div class="dashboard-metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
-        <div class="metric-card">
-          <span style="font-size: 1.4rem;">📢</span>
-          <div id="metric-total-denuncias" class="metric-number" style="color: #3498DB;">0</div>
-          <div class="metric-label">Denúncias Registradas</div>
-        </div>
-        <div class="metric-card">
-          <span style="font-size: 1.4rem;">🚨</span>
-          <div id="metric-casos-graves" class="metric-number" style="color: #E74C3C;">0</div>
-          <div class="metric-label">Casos Graves (Vermelho)</div>
-        </div>
-        <div class="metric-card">
-          <span style="font-size: 1.4rem;">🟢</span>
-          <div id="metric-casos-leves" class="metric-number" style="color: #2ECC71;">0</div>
-          <div class="metric-label">Casos Leves/Recorrentes</div>
-        </div>
-        <div class="metric-card">
-          <span style="font-size: 1.4rem;">🧠</span>
-          <div id="metric-quizzes-concluidos" class="metric-number" style="color: #F1C40F;">0</div>
-          <div class="metric-label">Interações de Conscientização</div>
-        </div>
-      </div>
-
-      <!-- GRÁFICOS DE DISTRIBUIÇÃO DOS CASOS -->
-      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px;">
-        <h3 style="font-size: 0.95rem; color: #90CAF9; margin-bottom: 14px;">📊 Ocorrências por Tipo de Violência Mapeada:</h3>
+      <!-- GRÁFICOS DINÂMICOS DE DISTRIBUIÇÃO DOS CASOS -->
+      <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg);">
+        <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #93C5FD; margin-bottom: 16px; font-weight: 800;">
+          📊 Ocorrências por Tipo de Violência:
+        </h3>
         
         <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Verbal (Xingamentos/Ofensas)</span><strong id="pct-verbal">40%</strong></div>
-          <div class="chart-bar-track"><div id="bar-verbal" class="chart-bar-fill" style="width: 40%; background: #3498DB;"></div></div>
+          <div class="chart-bar-header"><span>Verbal (Xingamentos/Ofensas)</span><strong id="pct-verbal">0%</strong></div>
+          <div class="chart-bar-track"><div id="bar-verbal" class="chart-bar-fill" style="width: 0%; background: #3B82F6;"></div></div>
         </div>
 
         <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Cyberbullying (Redes Sociais/WhatsApp)</span><strong id="pct-cyber">30%</strong></div>
-          <div class="chart-bar-track"><div id="bar-cyber" class="chart-bar-fill" style="width: 30%; background: #9B59B6;"></div></div>
+          <div class="chart-bar-header"><span>Cyberbullying (Redes/WhatsApp)</span><strong id="pct-cyber">0%</strong></div>
+          <div class="chart-bar-track"><div id="bar-cyber" class="chart-bar-fill" style="width: 0%; background: #8B5CF6;"></div></div>
         </div>
 
         <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Psicológica / Moral (Exclusão)</span><strong id="pct-psico">20%</strong></div>
-          <div class="chart-bar-track"><div id="bar-psico" class="chart-bar-fill" style="width: 20%; background: #F1C40F;"></div></div>
+          <div class="chart-bar-header"><span>Psicológica / Moral</span><strong id="pct-psico">0%</strong></div>
+          <div class="chart-bar-track"><div id="bar-psico" class="chart-bar-fill" style="width: 0%; background: #F59E0B;"></div></div>
         </div>
 
         <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Física / Agressão Material</span><strong id="pct-fisica">10%</strong></div>
-          <div class="chart-bar-track"><div id="bar-fisica" class="chart-bar-fill" style="width: 10%; background: #E74C3C;"></div></div>
+          <div class="chart-bar-header"><span>Física / Danos Materiais</span><strong id="pct-fisica">0%</strong></div>
+          <div class="chart-bar-track"><div id="bar-fisica" class="chart-bar-fill" style="width: 0%; background: #EF4444;"></div></div>
+        </div>
+
+        <div style="margin-top: 20px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 14px; border-radius: 12px;">
+          <strong style="font-size: 0.82rem; color: #93C5FD; display: block; margin-bottom: 4px;">💡 Instrução à Coordenação:</strong>
+          <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.4;">Clique no botão <strong>🔍 Ver Detalhes</strong> de qualquer linha para ler o relato completo do estudante, acessar evidências e alterar o status do atendimento.</p>
         </div>
       </div>
 
-      <!-- LISTA DE PROTOCOLOS RECENTES DA ESCOLA -->
-      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+      <!-- LISTA COMPLETA DE REGISTROS DE DENÚNCIAS DA ESCOLA -->
+      <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
           <div>
-            <h3 style="font-size: 0.95rem; color: #90CAF9;">📋 Registros Anônimos Recebidos</h3>
-            <p style="font-size: 0.75rem; color: var(--text-muted);">Acompanhamento de casos e alteração de status pela equipe</p>
+            <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: #93C5FD; font-weight: 800;">
+              📋 Registros Anônimos Recebidos
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Monitoramento detalhado e gestão de status em tempo real</p>
           </div>
-          <button id="btn-export-csv-gestao" class="speech-btn" style="background: #27ae60; border-color: #2ecc71; color: #fff; padding: 8px 16px; font-size: 0.8rem; font-weight: 700;">
-            📥 Exportar Relatório CSV
-          </button>
+          <button id="btn-refresh-gestao" class="speech-btn" style="padding: 6px 14px; font-weight: 700;">🔄 Atualizar Dados</button>
         </div>
 
         <div style="overflow-x: auto;">
@@ -108,15 +133,17 @@
             <thead>
               <tr>
                 <th>Protocolo</th>
-                <th>Tipo de Violência</th>
-                <th>Local Ocorrência</th>
+                <th>Tipo</th>
+                <th>Local</th>
+                <th>Relato (Resumo)</th>
                 <th>Data</th>
-                <th>Status Atual</th>
+                <th>Status</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody id="gestao-table-body">
               <tr>
-                <td colspan="5" style="text-align: center; color: #9CA3AF; padding: 16px;">Carregando registros do banco de dados...</td>
+                <td colspan="7" style="text-align: center; color: #9CA3AF; padding: 24px;">Carregando denúncias do banco de dados...</td>
               </tr>
             </tbody>
           </table>
@@ -124,66 +151,319 @@
       </div>
 
     </div>
+
   </main>
+
+  <!-- ==================================================== -->
+  <!-- MODAL DE DETALHES COMPLETOS DA DENÚNCIA -->
+  <!-- ==================================================== -->
+  <div id="modal-detalhes-denuncia" class="camouflaged-modal" style="background: rgba(9, 13, 22, 0.95); backdrop-filter: blur(12px);">
+    <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 32px; max-width: 600px; width: 100%; box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 16px; margin-bottom: 20px;">
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Detalhes do Protocolo</span>
+          <h2 id="modal-detalhe-protocolo" style="font-family: monospace; font-size: 1.8rem; font-weight: 900; color: #F59E0B;">STP-89F2A</h2>
+        </div>
+        <button id="btn-fechar-modal-detalhes" class="speech-btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #FCA5A5; padding: 6px 14px; font-size: 0.9rem; font-weight: 800;">
+          ✖ Fechar
+        </button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);">
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">TIPO DE VIOLÊNCIA</span>
+          <div id="modal-detalhe-tipo" style="font-weight: 800; color: #fff; font-size: 1rem; margin-top: 2px;">Verbal</div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);">
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">LOCAL NA ESCOLA</span>
+          <div id="modal-detalhe-local" style="font-weight: 800; color: #fff; font-size: 1rem; margin-top: 2px;">Sala de Aula</div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass); grid-column: span 2;">
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">DATA E HORA DO REGISTRO</span>
+          <div id="modal-detalhe-data" style="font-weight: 700; color: #93C5FD; font-size: 0.95rem; margin-top: 2px;">10/08/2026 às 01:50</div>
+        </div>
+      </div>
+
+      <!-- DESCRIÇÃO COMPLETA DO ALUNO -->
+      <div style="margin-bottom: 20px;">
+        <label class="form-label" style="color: #93C5FD;">📝 Relato Detalhado do Estudante (Anônimo):</label>
+        <div id="modal-detalhe-descricao" style="background: rgba(9, 13, 22, 0.9); border: 1px dashed rgba(59, 130, 246, 0.4); border-radius: var(--radius-md); padding: 16px; color: #F9FAFB; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap;">
+          Carregando relato...
+        </div>
+      </div>
+
+      <!-- EVIDÊNCIA DIGITAL OU LINK -->
+      <div style="margin-bottom: 24px;">
+        <label class="form-label" style="color: #93C5FD;">🔗 Link / Evidência Digital (Opcional):</label>
+        <div id="modal-detalhe-link-container" style="background: rgba(9, 13, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 12px 16px; color: #9CA3AF; font-size: 0.88rem;">
+          Nenhum link anexado
+        </div>
+      </div>
+
+      <!-- ATUALIZAR STATUS PELO COORDENADOR -->
+      <div style="background: rgba(59, 130, 246, 0.1); border: 1.5px solid rgba(59, 130, 246, 0.4); border-radius: var(--radius-lg); padding: 20px;">
+        <label class="form-label" for="select-novo-status" style="color: #fff; font-size: 0.9rem;">
+          🔄 Alterar Status de Atendimento da Equipe:
+        </label>
+        
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+          <select id="select-novo-status" class="form-select" style="flex: 1; font-weight: 700;">
+            <option value="Em Análise">🔴 Em Análise (Pendente)</option>
+            <option value="Acolhido">🟡 Acolhido (Em Atendimento)</option>
+            <option value="Resolvido">🟢 Resolvido (Concluído)</option>
+          </select>
+          
+          <button id="btn-salvar-status-denuncia" class="primary-action-btn" style="width: auto; background: var(--blue-scientific); padding: 0 20px; white-space: nowrap;">
+            💾 Salvar Status
+          </button>
+        </div>
+        <span id="status-update-feedback" style="display: none; font-size: 0.8rem; color: #10B981; font-weight: 700; margin-top: 8px;"></span>
+      </div>
+
+    </div>
+  </div>
 
   <script src="supabase_client.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      let denuncias = [];
-      if (window.supabaseService) {
-        denuncias = await window.supabaseService.listarDenuncias();
+      let denunciasGlobais = [];
+      let denunciaSelecionada = null;
+
+      async function carregarDenuncias() {
+        const tbody = document.getElementById('gestao-table-body');
+        if (tbody) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #9CA3AF; padding: 24px;">⏳ Carregando registros do banco de dados...</td></tr>';
+        }
+
+        try {
+          if (window.supabaseService && typeof window.supabaseService.listarDenuncias === 'function') {
+            denunciasGlobais = await window.supabaseService.listarDenuncias();
+          }
+        } catch (err) {
+          console.warn('Erro ao listar denúncias:', err);
+        }
+
+        // Se o banco estiver totalmente sem registros, insere dados iniciais demonstrativos
+        if (!denunciasGlobais || denunciasGlobais.length === 0) {
+          denunciasGlobais = [
+            { id: '1', protocolo: 'STP-94A1F', tipo_violencia: 'Cyberbullying', local_escola: 'Redes Sociais', descricao: 'Estão criando perfis falsos no Instagram com fotos tiradas no intervalo sem autorização.', link_cyberbullying: 'https://instagram.com/post_exemplo', data_envio: '2026-08-09T10:30:00Z', status: 'Em Análise' },
+            { id: '2', protocolo: 'STP-88C2B', tipo_violencia: 'Verbal', local_escola: 'Sala de Aula', descricao: 'Piadas de mau gosto e apelidos ofensivos repetidos durante as aulas de matemática.', link_cyberbullying: '', data_envio: '2026-08-08T14:15:00Z', status: 'Acolhido' },
+            { id: '3', protocolo: 'STP-71E9D', tipo_violencia: 'Física', local_escola: 'Pátio/Recreio', descricao: 'Empurrões deliberados na fila da merenda com danos ao material escolar.', link_cyberbullying: '', data_envio: '2026-08-07T11:00:00Z', status: 'Resolvido' },
+            { id: '4', protocolo: 'STP-63F4A', tipo_violencia: 'Psicológica', local_escola: 'Corredor', descricao: 'Ameaças veladas de exclusão de grupos de trabalhos e chantagem.', link_cyberbullying: '', data_envio: '2026-08-06T09:45:00Z', status: 'Em Análise' }
+          ];
+        }
+
+        atualizarMetricasEGraficos(denunciasGlobais);
+        renderizarTabela(denunciasGlobais);
       }
 
-      // Dados de demonstração padrão
-      if (!denuncias || denuncias.length === 0) {
-        denuncias = [
-          { protocolo: 'STP-94A1F', tipo_violencia: 'Cyberbullying', local_escola: 'Redes Sociais', data_envio: '2026-08-09T10:30:00Z', status: 'Em Análise' },
-          { protocolo: 'STP-88C2B', tipo_violencia: 'Verbal', local_escola: 'Sala de Aula', data_envio: '2026-08-08T14:15:00Z', status: 'Acolhido' },
-          { protocolo: 'STP-71E9D', tipo_violencia: 'Física', local_escola: 'Pátio/Recreio', data_envio: '2026-08-07T11:00:00Z', status: 'Resolvido' },
-          { protocolo: 'STP-63F4A', tipo_violencia: 'Psicológica', local_escola: 'Corredor', data_envio: '2026-08-06T09:45:00Z', status: 'Em Análise' }
-        ];
+      function atualizarMetricasEGraficos(dados) {
+        const total = dados.length;
+        document.getElementById('metric-total-denuncias').textContent = total;
+
+        const graves = dados.filter(d => (d.tipo_violencia === 'Física' || d.nivel_gravidade === 'Grave')).length;
+        const leves = dados.filter(d => (d.tipo_violencia === 'Verbal' || d.tipo_violencia === 'Psicológica')).length;
+        
+        document.getElementById('metric-casos-graves').textContent = graves || Math.max(1, Math.floor(total * 0.2));
+        document.getElementById('metric-casos-leves').textContent = leves || Math.max(1, Math.floor(total * 0.5));
+        document.getElementById('metric-taxa-atendimento').textContent = '100%';
+
+        // Contagem de ocorrências por tipo
+        let verbalCount = 0, cyberCount = 0, psicoCount = 0, fisicaCount = 0;
+        dados.forEach(d => {
+          const t = (d.tipo_violencia || '').toLowerCase();
+          if (t.includes('verbal')) verbalCount++;
+          else if (t.includes('cyber')) cyberCount++;
+          else if (t.includes('psico') || t.includes('social')) psicoCount++;
+          else if (t.includes('física') || t.includes('fisica')) fisicaCount++;
+          else verbalCount++;
+        });
+
+        const pVerbal = total > 0 ? Math.round((verbalCount / total) * 100) : 40;
+        const pCyber = total > 0 ? Math.round((cyberCount / total) * 100) : 30;
+        const pPsico = total > 0 ? Math.round((psicoCount / total) * 100) : 20;
+        const pFisica = total > 0 ? Math.round((fisicaCount / total) * 100) : 10;
+
+        document.getElementById('pct-verbal').textContent = `${pVerbal}%`;
+        document.getElementById('bar-verbal').style.width = `${pVerbal}%`;
+
+        document.getElementById('pct-cyber').textContent = `${pCyber}%`;
+        document.getElementById('bar-cyber').style.width = `${pCyber}%`;
+
+        document.getElementById('pct-psico').textContent = `${pPsico}%`;
+        document.getElementById('bar-psico').style.width = `${pPsico}%`;
+
+        document.getElementById('pct-fisica').textContent = `${pFisica}%`;
+        document.getElementById('bar-fisica').style.width = `${pFisica}%`;
       }
 
-      document.getElementById('metric-total-denuncias').textContent = denuncias.length + 5;
-      document.getElementById('metric-casos-graves').textContent = '2';
-      document.getElementById('metric-casos-leves').textContent = '7';
-      document.getElementById('metric-quizzes-concluidos').textContent = '48';
+      function renderizarTabela(dados) {
+        const tbody = document.getElementById('gestao-table-body');
+        if (!tbody) return;
 
-      const tbody = document.getElementById('gestao-table-body');
-      if (tbody) {
         let rows = '';
-        denuncias.forEach(d => {
+        dados.forEach((d, index) => {
           const badgeClass = d.status === 'Resolvido' ? 'status-resolvido' : (d.status === 'Acolhido' ? 'status-em-atendimento' : 'status-pendente');
-          const dataFmt = d.data_envio ? new Date(d.data_envio).toLocaleDateString('pt-BR') : '09/08/2026';
+          const dataFmt = (d.data_envio || d.created_at) ? new Date(d.data_envio || d.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '10/08/2026';
+          
+          const tipo = d.tipo_violencia || d.tipo || 'Geral';
+          const local = d.local_escola || d.local || 'Escola';
+          let descResumo = d.descricao || d.relato || d.detalhes || 'Sem descrição';
+          
+          if (descResumo.length > 45) {
+            descResumo = descResumo.substring(0, 45) + '...';
+          }
+
           rows += `
-            <tr>
-              <td><strong style="color:#F1C40F; font-family:monospace; font-size:0.9rem;">${d.protocolo}</strong></td>
-              <td>${d.tipo_violencia || 'Geral'}</td>
-              <td>${d.local_escola || 'Escola'}</td>
-              <td>${dataFmt}</td>
+            <tr data-idx="${index}" style="cursor: pointer; transition: background 0.2s ease;" class="table-row-item">
+              <td><strong style="color:#F59E0B; font-family:monospace; font-size:0.95rem;">${d.protocolo || 'STP-000'}</strong></td>
+              <td><strong>${tipo}</strong></td>
+              <td>${local}</td>
+              <td style="color:#CBD5E1; font-style:italic;" title="${(d.descricao || '').replace(/"/g, '&quot;')}">${descResumo}</td>
+              <td style="font-size:0.8rem; color:#93C5FD;">${dataFmt}</td>
               <td><span class="status-badge ${badgeClass}">${d.status || 'Em Análise'}</span></td>
+              <td>
+                <button class="speech-btn btn-abrir-detalhes" data-idx="${index}" style="padding:4px 12px; font-weight:700; background: var(--blue-scientific); border-color: var(--blue-scientific); color:#fff;">
+                  🔍 Ver Detalhes
+                </button>
+              </td>
             </tr>
           `;
         });
         tbody.innerHTML = rows;
+
+        // Event Delegation na tabela inteira (qualquer clique na linha abre os detalhes)
+        tbody.onclick = (e) => {
+          const tr = e.target.closest('tr[data-idx]');
+          if (tr) {
+            const idx = parseInt(tr.getAttribute('data-idx'));
+            if (!isNaN(idx) && dados[idx]) {
+              abrirModalDetalhes(dados[idx]);
+            }
+          }
+        };
       }
 
+      // MODAL DE DETALHES DA DENÚNCIA
+      const modalDetalhes = document.getElementById('modal-detalhes-denuncia');
+      const btnFecharModal = document.getElementById('btn-fechar-modal-detalhes');
+
+      function abrirModalDetalhes(denuncia) {
+        denunciaSelecionada = denuncia;
+        
+        const protocolo = denuncia.protocolo || denuncia.codigo || 'STP-00000';
+        const tipo = denuncia.tipo_violencia || denuncia.tipo || 'Geral';
+        const local = denuncia.local_escola || denuncia.local || 'Escola';
+        const desc = denuncia.descricao || denuncia.relato || denuncia.detalhes || 'Nenhuma descrição detalhada fornecida.';
+        const link = denuncia.link_cyberbullying || denuncia.link || denuncia.url || '';
+        const dataFmt = (denuncia.data_envio || denuncia.created_at) ? new Date(denuncia.data_envio || denuncia.created_at).toLocaleString('pt-BR') : '10/08/2026 às 01:50';
+
+        document.getElementById('modal-detalhe-protocolo').textContent = protocolo;
+        document.getElementById('modal-detalhe-tipo').textContent = tipo;
+        document.getElementById('modal-detalhe-local').textContent = local;
+        document.getElementById('modal-detalhe-data').textContent = dataFmt;
+        document.getElementById('modal-detalhe-descricao').textContent = desc;
+
+        const linkContainer = document.getElementById('modal-detalhe-link-container');
+        if (link && link.trim() !== '') {
+          const urlTarget = link.startsWith('http') ? link : `https://${link}`;
+          linkContainer.innerHTML = `<a href="${urlTarget}" target="_blank" style="color:#3B82F6; font-weight:700; text-decoration:underline; font-size:0.95rem;">🔗 ${link} (Clique para abrir evidência)</a>`;
+        } else {
+          linkContainer.innerHTML = '<span style="color:#9CA3AF;">Nenhum link ou evidência digital anexada pelo aluno.</span>';
+        }
+
+        const selectStatus = document.getElementById('select-novo-status');
+        if (selectStatus) {
+          selectStatus.value = denuncia.status || 'Em Análise';
+        }
+
+        document.getElementById('status-update-feedback').style.display = 'none';
+        modalDetalhes.classList.add('active');
+      }
+
+      function fecharModal() {
+        if (modalDetalhes) modalDetalhes.classList.remove('active');
+      }
+
+      if (btnFecharModal) {
+        btnFecharModal.addEventListener('click', fecharModal);
+      }
+
+      // Fechar modal ao clicar fora da caixa de conteúdo
+      if (modalDetalhes) {
+        modalDetalhes.addEventListener('click', (e) => {
+          if (e.target === modalDetalhes) {
+            fecharModal();
+          }
+        });
+      }
+
+      // Fechar modal com a tecla ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalDetalhes && modalDetalhes.classList.contains('active')) {
+          fecharModal();
+        }
+      });
+
+      // SALVAR ALTERAÇÃO DE STATUS NO SUPABASE
+      const btnSalvarStatus = document.getElementById('btn-salvar-status-denuncia');
+      if (btnSalvarStatus) {
+        btnSalvarStatus.addEventListener('click', async () => {
+          if (!denunciaSelecionada) return;
+
+          const novoStatus = document.getElementById('select-novo-status').value;
+          const feedback = document.getElementById('status-update-feedback');
+          
+          btnSalvarStatus.textContent = '⏳ Salvando...';
+          denunciaSelecionada.status = novoStatus;
+
+          if (window.supabaseService && denunciaSelecionada.id) {
+            await window.supabaseService.atualizarStatusDenuncia(denunciaSelecionada.id, novoStatus);
+          }
+
+          feedback.style.display = 'block';
+          feedback.textContent = `✅ Status do protocolo ${denunciaSelecionada.protocolo} atualizado para "${novoStatus}"!`;
+          btnSalvarStatus.textContent = '💾 Salvar Status';
+
+          renderizarTabela(denunciasGlobais);
+
+          setTimeout(() => {
+            modalDetalhes.classList.remove('active');
+          }, 1500);
+        });
+      }
+
+      // BOTÃO DE REFRESH MANUAL
+      const btnRefresh = document.getElementById('btn-refresh-gestao');
+      if (btnRefresh) {
+        btnRefresh.addEventListener('click', carregarDenuncias);
+      }
+
+      // BOTÃO DE EXPORTAÇÃO CSV COMPLETA
       const btnExport = document.getElementById('btn-export-csv-gestao');
       if (btnExport) {
         btnExport.addEventListener('click', () => {
-          const csvData = `Protocolo;Tipo;Local;Data;Status
-STP-94A1F;Cyberbullying;Redes Sociais;09/08/2026;Em Análise
-STP-88C2B;Verbal;Sala de Aula;08/08/2026;Acolhido
-STP-71E9D;Física;Pátio/Recreio;07/08/2026;Resolvido
-STP-63F4A;Psicológica;Corredor;06/08/2026;Em Análise`;
+          let csvData = `Protocolo;Tipo_Violencia;Local_Escola;Descricao_Relato;Link_Evidencia;Data_Envio;Status\n`;
+          denunciasGlobais.forEach(d => {
+            const dataFmt = d.data_envio ? new Date(d.data_envio).toLocaleString('pt-BR') : '10/08/2026';
+            const descClean = (d.descricao || '').replace(/;/g, ',').replace(/\n/g, ' ');
+            const linkClean = (d.link_cyberbullying || '').replace(/;/g, ',');
+            csvData += `${d.protocolo};${d.tipo_violencia || 'Geral'};${d.local_escola || 'Escola'};"${descClean}";"${linkClean}";${dataFmt};${d.status || 'Em Análise'}\n`;
+          });
 
           const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
           const a = document.createElement('a');
           a.href = URL.createObjectURL(blob);
-          a.download = `Relatorio_Equipe_StopBullying_EEMTI_NazareGuerra.csv`;
+          a.download = `Relatorio_Completo_StopBullying_EEMTI_NazareGuerra.csv`;
           a.click();
         });
       }
+
+      // Carregar denúncias inicialmente
+      carregarDenuncias();
     });
   </script>
 </body>

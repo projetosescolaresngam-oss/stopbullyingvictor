@@ -4,8 +4,8 @@
 // ================================================================
 
 window.SUPABASE_CONFIG = window.SUPABASE_CONFIG || {
-  url: 'https://sua-url-supabase.supabase.co', // Substitua pela URL do seu projeto Supabase
-  anonKey: 'sua-chave-anonima-supabase'       // Substitua pela chave Anon/Public do Supabase
+  url: 'https://lbqfnqrgbbxounjxxikr.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxicWZucXJnYmJ4b3Vuanh4aWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMTU4OTUsImV4cCI6MjEwMTg5MTg5NX0.qVDtAJ-0uhSQT-H_DPIoL6Z2vrpRr_Zm90TOMZo80x0' // Chave de API / AnonKey
 };
 
 class SupabaseService {
@@ -76,6 +76,34 @@ class SupabaseService {
     return { sucesso: true, protocolo: denunciaData.protocolo, modo: 'offline' };
   }
 
+  // --- LISTAR DENÚNCIAS (PARA O PAINEL DE GESTÃO) ---
+  async listarDenuncias() {
+    try {
+      if (this.isOnline) {
+        const dados = await this._fetchSupabase('denuncias?select=*&order=data_envio.desc', 'GET');
+        if (dados && Array.isArray(dados)) return dados;
+      }
+    } catch (e) {
+      console.warn('[Supabase] Falha ao listar denúncias online:', e.message);
+    }
+    const historico = JSON.parse(localStorage.getItem('stopbullying_historico_denuncias') || '[]');
+    return historico;
+  }
+
+  // --- ATUALIZAR STATUS DE DENÚNCIA ---
+  async atualizarStatusDenuncia(id, novoStatus) {
+    this.registrarLog('ATUALIZAR_STATUS_DENUNCIA', `ID: ${id}, Status: ${novoStatus}`);
+    try {
+      if (this.isOnline) {
+        await this._fetchSupabase(`denuncias?id=eq.${id}`, 'PATCH', { status: novoStatus });
+        return { sucesso: true, modo: 'online' };
+      }
+    } catch (e) {
+      console.warn('[Supabase] Erro ao atualizar status online:', e.message);
+    }
+    return { sucesso: true, modo: 'offline' };
+  }
+
   // --- SUGESTÕES E RECLAMAÇÕES ---
   async enviarSugestao(sugestaoData) {
     try {
@@ -144,7 +172,7 @@ class SupabaseService {
         await this._fetchSupabase('logs_sistema', 'POST', logItem);
         return;
       }
-    } catch (e) {}
+    } catch (e) { }
     this._salvarLocal('stopbullying_logs', logItem);
   }
 

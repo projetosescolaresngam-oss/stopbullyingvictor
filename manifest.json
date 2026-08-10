@@ -1,12 +1,12 @@
 {
   "name": "StopBullying — EEMTI Nazaré Guerra",
   "short_name": "StopBullying",
-  "description": "Aplicativo mobile para denúncia anônima, apoio emocional, triagem por semáforo e prevenção ao bullying escolar.",
+  "description": "Plataforma PWA responsiva para denúncia anônima, apoio emocional, triagem por semáforo e prevenção ao bullying escolar.",
   "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#111827",
-  "theme_color": "#0D2B45",
+  "orientation": "any",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
   "lang": "pt-BR",
   "icons": [
     {

@@ -83,25 +83,31 @@ ALTER TABLE alertas_sos ENABLE ROW LEVEL SECURITY;
 
 -- Políticas de inserção e leitura pública anônima (anônimos podem inserir e consultar)
 DROP POLICY IF EXISTS "Inserir Denúncia Anônima" ON denuncias;
-CREATE POLICY "Inserir Denúncia Anônima" ON denuncias FOR INSERT WITH CHECK (true);
+CREATE POLICY "Inserir Denúncia Anônima" ON denuncias FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Consultar Denúncia por Protocolo" ON denuncias;
-CREATE POLICY "Consultar Denúncia por Protocolo" ON denuncias FOR SELECT USING (true);
+CREATE POLICY "Consultar Denúncia por Protocolo" ON denuncias FOR SELECT TO anon, authenticated USING (true);
+
+DROP POLICY IF EXISTS "Atualizar Status Denúncia" ON denuncias;
+CREATE POLICY "Atualizar Status Denúncia" ON denuncias FOR UPDATE TO anon, authenticated USING (true);
 
 DROP POLICY IF EXISTS "Inserir Sugestão" ON reclamacoes_sugestoes;
-CREATE POLICY "Inserir Sugestão" ON reclamacoes_sugestoes FOR INSERT WITH CHECK (true);
+CREATE POLICY "Inserir Sugestão" ON reclamacoes_sugestoes FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Ler Materiais de Apoio" ON materiais_apoio;
-CREATE POLICY "Ler Materiais de Apoio" ON materiais_apoio FOR SELECT USING (true);
+CREATE POLICY "Ler Materiais de Apoio" ON materiais_apoio FOR SELECT TO anon, authenticated USING (true);
 
 DROP POLICY IF EXISTS "Inserir Log de Sistema" ON logs_sistema;
-CREATE POLICY "Inserir Log de Sistema" ON logs_sistema FOR INSERT WITH CHECK (true);
+CREATE POLICY "Inserir Log de Sistema" ON logs_sistema FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Inserir Triagem" ON triagens_resultado;
-CREATE POLICY "Inserir Triagem" ON triagens_resultado FOR INSERT WITH CHECK (true);
+CREATE POLICY "Inserir Triagem" ON triagens_resultado FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Inserir Alerta SOS" ON alertas_sos;
-CREATE POLICY "Inserir Alerta SOS" ON alertas_sos FOR INSERT WITH CHECK (true);
+CREATE POLICY "Inserir Alerta SOS" ON alertas_sos FOR INSERT TO anon, authenticated WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Consultar Alerta SOS" ON alertas_sos;
+CREATE POLICY "Consultar Alerta SOS" ON alertas_sos FOR SELECT TO anon, authenticated USING (true);
 
 -- ================================================================
 -- INSERÇÃO DE DADOS INICIAIS DE MATERIAIS DE APOIO (SEED DATA)
