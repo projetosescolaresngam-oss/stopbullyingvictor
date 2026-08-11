@@ -163,7 +163,285 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // === DENÚNCIA ANÔNIMA (GERADOR DE PROTOCOLO HASH) ===
+  // === GERENCIAMENTO DE MÍDIAS E GRAVADOR DE ÁUDIO DE ATÉ 60s ===
+  const mediaState = {
+    tipoAtivo: 'foto',
+    midiaAnexa: null,
+    midiaTipo: null,
+    midiaDuracao: 0,
+    mediaRecorder: null,
+    audioChunks: [],
+    recordTimer: null,
+    secondsRecorded: 0
+  };
+
+  // Alternar entre abas (Foto, Vídeo, Áudio)
+  document.querySelectorAll('.media-tab-btn').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.media-tab-btn').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const targetType = tab.getAttribute('data-media-type');
+      mediaState.tipoAtivo = targetType;
+
+      const boxFoto = document.getElementById('media-box-foto');
+      const boxVideo = document.getElementById('media-box-video');
+      const boxAudio = document.getElementById('media-box-audio');
+
+      if (boxFoto) boxFoto.style.display = targetType === 'foto' ? 'block' : 'none';
+      if (boxVideo) boxVideo.style.display = targetType === 'video' ? 'block' : 'none';
+      if (boxAudio) boxAudio.style.display = targetType === 'audio' ? 'block' : 'none';
+      
+      esconderErroMidia();
+    });
+  });
+
+  function exibirErroMidia(msg) {
+    const errEl = document.getElementById('media-error-message');
+    if (errEl) {
+      errEl.textContent = `⚠️ ${msg}`;
+      errEl.style.display = 'block';
+    }
+  }
+
+  function esconderErroMidia() {
+    const errEl = document.getElementById('media-error-message');
+    if (errEl) errEl.style.display = 'none';
+  }
+
+  function definirMidiaAnexa(dataUrl, tipo, duracao = 0) {
+    mediaState.midiaAnexa = dataUrl;
+    mediaState.midiaTipo = tipo;
+    mediaState.midiaDuracao = Math.round(duracao);
+
+    const previewContainer = document.getElementById('media-preview-container');
+    const previewBadge = document.getElementById('preview-title-badge');
+    const previewBody = document.getElementById('media-preview-body');
+
+    esconderErroMidia();
+
+    if (tipo === 'foto') {
+      previewBadge.textContent = '📷 Foto Anexada';
+      previewBadge.className = 'hero-tag tag-green';
+      previewBody.innerHTML = `<img src="${dataUrl}" alt="Preview Foto">`;
+    } else if (tipo === 'video') {
+      previewBadge.textContent = `🎥 Vídeo Anexado (${Math.round(duracao)}s)`;
+      previewBadge.className = 'hero-tag tag-green';
+      previewBody.innerHTML = `<video src="${dataUrl}" controls></video>`;
+    } else if (tipo === 'audio') {
+      previewBadge.textContent = `🎙️ Áudio Anexado (${Math.round(duracao)}s)`;
+      previewBadge.className = 'hero-tag tag-green';
+      previewBody.innerHTML = `<audio src="${dataUrl}" controls></audio>`;
+    }
+
+    if (previewContainer) previewContainer.style.display = 'block';
+  }
+
+  function limparMidiaAnexa() {
+    mediaState.midiaAnexa = null;
+    mediaState.midiaTipo = null;
+    mediaState.midiaDuracao = 0;
+    const previewContainer = document.getElementById('media-preview-container');
+    const previewBody = document.getElementById('media-preview-body');
+    if (previewContainer) previewContainer.style.display = 'none';
+    if (previewBody) previewBody.innerHTML = '';
+    
+    const inputFoto = document.getElementById('input-media-foto');
+    const inputVideo = document.getElementById('input-media-video');
+    const inputAudio = document.getElementById('input-media-audio');
+    if (inputFoto) inputFoto.value = '';
+    if (inputVideo) inputVideo.value = '';
+    if (inputAudio) inputAudio.value = '';
+
+    esconderErroMidia();
+  }
+
+  const btnRemoverMidia = document.getElementById('btn-remover-midia');
+  if (btnRemoverMidia) {
+    btnRemoverMidia.addEventListener('click', limparMidiaAnexa);
+  }
+
+  // UPLOAD DE FOTO
+  const inputFoto = document.getElementById('input-media-foto');
+  if (inputFoto) {
+    inputFoto.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        exibirErroMidia('Por favor, selecione um arquivo de imagem válido (JPG, PNG, WEBP).');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        definirMidiaAnexa(evt.target.result, 'foto', 0);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // UPLOAD DE VÍDEO (VALIDAÇÃO DE 60 SEGUNDOS MÁXIMO)
+  const inputVideo = document.getElementById('input-media-video');
+  if (inputVideo) {
+    inputVideo.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('video/')) {
+        exibirErroMidia('Por favor, selecione um arquivo de vídeo válido (MP4, WEBM, MOV).');
+        return;
+      }
+
+      const tempUrl = URL.createObjectURL(file);
+      const tempVideo = document.createElement('video');
+      tempVideo.preload = 'metadata';
+      tempVideo.src = tempUrl;
+
+      tempVideo.onloadedmetadata = () => {
+        URL.revokeObjectURL(tempUrl);
+        const duracao = tempVideo.duration;
+
+        if (duracao > 60.5) {
+          exibirErroMidia(`O vídeo selecionado possui ${Math.round(duracao)}s. O limite máximo permitido para a denúncia é de 60 segundos!`);
+          inputVideo.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          definirMidiaAnexa(evt.target.result, 'video', duracao);
+        };
+        reader.readAsDataURL(file);
+      };
+
+      tempVideo.onerror = () => {
+        exibirErroMidia('Não foi possível ler o vídeo. Verifique se o formato é suportado.');
+      };
+    });
+  }
+
+  // UPLOAD DE ARQUIVO DE ÁUDIO (VALIDAÇÃO DE 60 SEGUNDOS)
+  const inputAudio = document.getElementById('input-media-audio');
+  if (inputAudio) {
+    inputAudio.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('audio/')) {
+        exibirErroMidia('Por favor, selecione um arquivo de áudio válido.');
+        return;
+      }
+
+      const tempUrl = URL.createObjectURL(file);
+      const tempAudio = document.createElement('audio');
+      tempAudio.preload = 'metadata';
+      tempAudio.src = tempUrl;
+
+      tempAudio.onloadedmetadata = () => {
+        URL.revokeObjectURL(tempUrl);
+        const duracao = tempAudio.duration;
+
+        if (duracao > 60.5) {
+          exibirErroMidia(`O arquivo de áudio possui ${Math.round(duracao)}s. O limite máximo permitido é de 60 segundos!`);
+          inputAudio.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          definirMidiaAnexa(evt.target.result, 'audio', duracao);
+        };
+        reader.readAsDataURL(file);
+      };
+
+      tempAudio.onerror = () => {
+        exibirErroMidia('Não foi possível processar este arquivo de áudio.');
+      };
+    });
+  }
+
+  // GRAVAÇÃO DE ÁUDIO VIA MICROFONE (MEDIA RECORDER API - MÁXIMO 60s)
+  const btnStartRecord = document.getElementById('btn-start-audio-record');
+  const btnStopRecord = document.getElementById('btn-stop-audio-record');
+  const btnCancelRecord = document.getElementById('btn-cancel-audio-record');
+  const audioPanel = document.getElementById('audio-recording-panel');
+  const timerText = document.getElementById('recording-timer');
+  const progressFill = document.getElementById('recording-progress-fill');
+
+  if (btnStartRecord) {
+    btnStartRecord.addEventListener('click', async () => {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        exibirErroMidia('Gravação de áudio não é suportada neste navegador.');
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaState.audioChunks = [];
+        mediaState.mediaRecorder = new MediaRecorder(stream);
+
+        mediaState.mediaRecorder.ondataavailable = (evt) => {
+          if (evt.data.size > 0) mediaState.audioChunks.push(evt.data);
+        };
+
+        mediaState.mediaRecorder.onstop = () => {
+          stream.getTracks().forEach(track => track.stop());
+          clearInterval(mediaState.recordTimer);
+
+          if (mediaState.secondsRecorded > 0 && mediaState.audioChunks.length > 0) {
+            const audioBlob = new Blob(mediaState.audioChunks, { type: 'audio/webm' });
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              definirMidiaAnexa(evt.target.result, 'audio', mediaState.secondsRecorded);
+            };
+            reader.readAsDataURL(audioBlob);
+          }
+          if (audioPanel) audioPanel.style.display = 'none';
+        };
+
+        mediaState.mediaRecorder.start();
+        mediaState.secondsRecorded = 0;
+        if (audioPanel) audioPanel.style.display = 'block';
+        if (timerText) timerText.textContent = '00:00 / 01:00';
+        if (progressFill) progressFill.style.width = '0%';
+
+        mediaState.recordTimer = setInterval(() => {
+          mediaState.secondsRecorded++;
+          const sec = mediaState.secondsRecorded;
+          const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+          const ss = String(sec % 60).padStart(2, '0');
+          if (timerText) timerText.textContent = `${mm}:${ss} / 01:00`;
+          if (progressFill) progressFill.style.width = `${(sec / 60) * 100}%`;
+
+          // CORTAR AUTOMATICAMENTE AOS 60 SEGUNDOS
+          if (sec >= 60) {
+            if (mediaState.mediaRecorder && mediaState.mediaRecorder.state === 'recording') {
+              mediaState.mediaRecorder.stop();
+            }
+          }
+        }, 1000);
+
+      } catch (err) {
+        exibirErroMidia('Permissão de microfone negada ou erro ao acessar o áudio.');
+      }
+    });
+  }
+
+  if (btnStopRecord) {
+    btnStopRecord.addEventListener('click', () => {
+      if (mediaState.mediaRecorder && mediaState.mediaRecorder.state === 'recording') {
+        mediaState.mediaRecorder.stop();
+      }
+    });
+  }
+
+  if (btnCancelRecord) {
+    btnCancelRecord.addEventListener('click', () => {
+      if (mediaState.mediaRecorder && mediaState.mediaRecorder.state === 'recording') {
+        mediaState.secondsRecorded = 0;
+        mediaState.mediaRecorder.stop();
+      }
+      if (audioPanel) audioPanel.style.display = 'none';
+    });
+  }
+
+  // === DENÚNCIA ANÔNIMA (GERADOR DE PROTOCOLO HASH E ENVIO DE MÍDIAS) ===
   const formDenuncia = document.getElementById('form-denuncia-anonima');
   if (formDenuncia) {
     formDenuncia.addEventListener('submit', async (e) => {
@@ -185,6 +463,9 @@ document.addEventListener('DOMContentLoaded', () => {
         local_escola: localEscola,
         descricao,
         link_cyberbullying: linkCyber,
+        midia_anexa: mediaState.midiaAnexa || null,
+        midia_tipo: mediaState.midiaTipo || null,
+        midia_duracao: mediaState.midiaDuracao || 0,
         data_envio: new Date().toISOString()
       };
 
@@ -197,6 +478,10 @@ document.addEventListener('DOMContentLoaded', () => {
       
       document.getElementById('denuncia-form-container').style.display = 'none';
       document.getElementById('denuncia-sucesso-container').style.display = 'block';
+
+      // Resetar form e mídias
+      formDenuncia.reset();
+      limparMidiaAnexa();
     });
   }
 
@@ -214,12 +499,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnBaixarComprovante = document.getElementById('btn-baixar-comprovante');
   if (btnBaixarComprovante) {
     btnBaixarComprovante.addEventListener('click', () => {
+      const temMidia = mediaState.midiaTipo ? `SIM (${mediaState.midiaTipo.toUpperCase()} ${mediaState.midiaDuracao ? mediaState.midiaDuracao + 's' : ''})` : 'NÃO';
       const txtContent = `================================================
 PROJETO STOPBULLYING — COMPROVANTE DE DENÚNCIA ANÔNIMA
 EEMTI Nazaré Guerra — Ceará Científico 2026
 ================================================
 PROTOCOLO: ${state.ultimoProtocolo}
 DATA: ${new Date().toLocaleString('pt-BR')}
+MÍDIA ANEXA: ${temMidia}
 STATUS: 100% Protegido e Enviado à Coordenação
 
 Guarde este protocolo para acompanhamento anônimo.

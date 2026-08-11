@@ -196,10 +196,18 @@
       </div>
 
       <!-- EVIDÊNCIA DIGITAL OU LINK -->
-      <div style="margin-bottom: 24px;">
+      <div style="margin-bottom: 20px;">
         <label class="form-label" style="color: #93C5FD;">🔗 Link / Evidência Digital (Opcional):</label>
         <div id="modal-detalhe-link-container" style="background: rgba(9, 13, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 12px 16px; color: #9CA3AF; font-size: 0.88rem;">
           Nenhum link anexado
+        </div>
+      </div>
+
+      <!-- MÍDIA ANEXADA (FOTO, VÍDEO E ÁUDIO GRAVADO) -->
+      <div style="margin-bottom: 24px;">
+        <label class="form-label" style="color: #93C5FD;">📁 Mídia e Prova Anexada (Foto, Vídeo ou Áudio):</label>
+        <div id="modal-detalhe-midia-container" style="background: rgba(9, 13, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 16px; text-align: center; color: #9CA3AF; font-size: 0.88rem;">
+          Nenhuma mídia anexada
         </div>
       </div>
 
@@ -312,14 +320,19 @@
           const tipo = d.tipo_violencia || d.tipo || 'Geral';
           const local = d.local_escola || d.local || 'Escola';
           let descResumo = d.descricao || d.relato || d.detalhes || 'Sem descrição';
+
+          let tagMidia = '';
+          if (d.midia_tipo === 'foto') tagMidia = ' <span style="font-size:0.75rem; background:rgba(16,185,129,0.2); color:#A7F3D0; padding:2px 6px; border-radius:4px; margin-left:4px;">📷 Foto</span>';
+          else if (d.midia_tipo === 'video') tagMidia = ` <span style="font-size:0.75rem; background:rgba(59,130,246,0.2); color:#93C5FD; padding:2px 6px; border-radius:4px; margin-left:4px;">🎥 Vídeo (${d.midia_duracao || '0'}s)</span>`;
+          else if (d.midia_tipo === 'audio') tagMidia = ` <span style="font-size:0.75rem; background:rgba(245,158,11,0.2); color:#FDE68A; padding:2px 6px; border-radius:4px; margin-left:4px;">🎙️ Áudio (${d.midia_duracao || '0'}s)</span>`;
           
-          if (descResumo.length > 45) {
-            descResumo = descResumo.substring(0, 45) + '...';
+          if (descResumo.length > 40) {
+            descResumo = descResumo.substring(0, 40) + '...';
           }
 
           rows += `
             <tr data-idx="${index}" style="cursor: pointer; transition: background 0.2s ease;" class="table-row-item">
-              <td><strong style="color:#F59E0B; font-family:monospace; font-size:0.95rem;">${d.protocolo || 'STP-000'}</strong></td>
+              <td><strong style="color:#F59E0B; font-family:monospace; font-size:0.95rem;">${d.protocolo || 'STP-000'}</strong>${tagMidia}</td>
               <td><strong>${tipo}</strong></td>
               <td>${local}</td>
               <td style="color:#CBD5E1; font-style:italic;" title="${(d.descricao || '').replace(/"/g, '&quot;')}">${descResumo}</td>
@@ -373,6 +386,36 @@
           linkContainer.innerHTML = `<a href="${urlTarget}" target="_blank" style="color:#3B82F6; font-weight:700; text-decoration:underline; font-size:0.95rem;">🔗 ${link} (Clique para abrir evidência)</a>`;
         } else {
           linkContainer.innerHTML = '<span style="color:#9CA3AF;">Nenhum link ou evidência digital anexada pelo aluno.</span>';
+        }
+
+        // RENDERIZAR MÍDIA ANEXADA (FOTO, VÍDEO E ÁUDIO GRAVADO)
+        const midiaContainer = document.getElementById('modal-detalhe-midia-container');
+        if (midiaContainer) {
+          if (denuncia.midia_anexa && denuncia.midia_anexa.trim() !== '') {
+            const mTipo = denuncia.midia_tipo || 'foto';
+            const mDuracao = denuncia.midia_duracao ? `${denuncia.midia_duracao}s` : '';
+            
+            if (mTipo === 'foto') {
+              midiaContainer.innerHTML = `
+                <div style="margin-bottom: 8px;"><span class="hero-tag tag-green">📷 Imagem Anexada</span></div>
+                <img src="${denuncia.midia_anexa}" alt="Foto da denúncia" style="max-width:100%; max-height: 320px; border-radius: 8px; border: 1px solid var(--border-glass);">
+              `;
+            } else if (mTipo === 'video') {
+              midiaContainer.innerHTML = `
+                <div style="margin-bottom: 8px;"><span class="hero-tag tag-green">🎥 Vídeo Anexado (${mDuracao})</span></div>
+                <video src="${denuncia.midia_anexa}" controls style="max-width:100%; max-height: 320px; border-radius: 8px; border: 1px solid var(--border-glass);"></video>
+              `;
+            } else if (mTipo === 'audio') {
+              midiaContainer.innerHTML = `
+                <div style="margin-bottom: 8px;"><span class="hero-tag tag-green">🎙️ Áudio Gravado/Anexado (${mDuracao})</span></div>
+                <audio src="${denuncia.midia_anexa}" controls style="width:100%; margin-top: 6px;"></audio>
+              `;
+            } else {
+              midiaContainer.innerHTML = `<span style="color:#9CA3AF;">Mídia em formato não reconhecido.</span>`;
+            }
+          } else {
+            midiaContainer.innerHTML = '<span style="color:#9CA3AF;">Nenhuma foto, vídeo ou áudio anexado a esta denúncia.</span>';
+          }
         }
 
         const selectStatus = document.getElementById('select-novo-status');
@@ -446,12 +489,14 @@
       const btnExport = document.getElementById('btn-export-csv-gestao');
       if (btnExport) {
         btnExport.addEventListener('click', () => {
-          let csvData = `Protocolo;Tipo_Violencia;Local_Escola;Descricao_Relato;Link_Evidencia;Data_Envio;Status\n`;
+          let csvData = `Protocolo;Tipo_Violencia;Local_Escola;Descricao_Relato;Link_Evidencia;Midia_Tipo;Midia_Duracao_Seg;Data_Envio;Status\n`;
           denunciasGlobais.forEach(d => {
             const dataFmt = d.data_envio ? new Date(d.data_envio).toLocaleString('pt-BR') : '10/08/2026';
             const descClean = (d.descricao || '').replace(/;/g, ',').replace(/\n/g, ' ');
             const linkClean = (d.link_cyberbullying || '').replace(/;/g, ',');
-            csvData += `${d.protocolo};${d.tipo_violencia || 'Geral'};${d.local_escola || 'Escola'};"${descClean}";"${linkClean}";${dataFmt};${d.status || 'Em Análise'}\n`;
+            const midiaTipo = d.midia_tipo || 'Nenhum';
+            const midiaDur = d.midia_duracao || 0;
+            csvData += `${d.protocolo};${d.tipo_violencia || 'Geral'};${d.local_escola || 'Escola'};"${descClean}";"${linkClean}";${midiaTipo};${midiaDur};${dataFmt};${d.status || 'Em Análise'}\n`;
           });
 
           const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });

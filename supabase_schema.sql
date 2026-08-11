@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS denuncias (
     local_escola VARCHAR(100) NOT NULL,
     descricao TEXT NOT NULL,
     link_cyberbullying TEXT,
+    midia_anexa TEXT, -- Data URL (Base64) da foto, vídeo ou áudio
+    midia_tipo VARCHAR(30), -- 'foto', 'video', 'audio'
+    midia_duracao INT DEFAULT 0, -- Duração em segundos (máximo 60s)
     nivel_gravidade VARCHAR(20) DEFAULT 'Pendente',
     status VARCHAR(30) DEFAULT 'Em Análise',
     data_envio TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP

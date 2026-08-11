@@ -251,6 +251,77 @@
               <input type="url" id="denuncia-link" class="form-input"
                 placeholder="https://instagram.com/post_ou_prints_mensagens">
             </div>
+
+            <!-- SEÇÃO DE ANEXO DE MÍDIAS (FOTO, VÍDEO E ÁUDIO ATÉ 60S) -->
+            <div class="form-group full-width">
+              <label class="form-label">📎 Anexar Mídias e Provas (Opcional - Áudio e Vídeo de até 60s)</label>
+              
+              <div class="media-selector-tabs">
+                <button type="button" class="media-tab-btn active" data-media-type="foto">📷 Foto</button>
+                <button type="button" class="media-tab-btn" data-media-type="video">🎥 Vídeo (máx 60s)</button>
+                <button type="button" class="media-tab-btn" data-media-type="audio">🎙️ Áudio (máx 60s)</button>
+              </div>
+
+              <!-- CONTÊINER DE FOTO -->
+              <div class="media-input-box" id="media-box-foto">
+                <input type="file" id="input-media-foto" accept="image/*" class="form-input-file" style="display:none;">
+                <label for="input-media-foto" class="media-upload-dropzone">
+                  <span class="dropzone-icon">🖼️</span>
+                  <span>Clique para selecionar uma foto ou imagem</span>
+                  <small style="color: var(--text-muted);">Formatos: JPG, PNG, WEBP</small>
+                </label>
+              </div>
+
+              <!-- CONTÊINER DE VÍDEO -->
+              <div class="media-input-box" id="media-box-video" style="display:none;">
+                <input type="file" id="input-media-video" accept="video/mp4,video/webm,video/ogg,video/quicktime,video/*" class="form-input-file" style="display:none;">
+                <label for="input-media-video" class="media-upload-dropzone">
+                  <span class="dropzone-icon">🎬</span>
+                  <span>Clique para selecionar um vídeo (Duração máxima: 60 segundos)</span>
+                  <small style="color: var(--text-muted);">Formatos: MP4, WEBM, MOV (Verificação de tempo de vídeo automática)</small>
+                </label>
+              </div>
+
+              <!-- CONTÊINER DE ÁUDIO -->
+              <div class="media-input-box" id="media-box-audio" style="display:none;">
+                <div class="audio-action-row">
+                  <button type="button" id="btn-start-audio-record" class="audio-record-btn">
+                    <span class="record-dot"></span> 🎙️ Gravar Áudio pelo Microfone (máx 60s)
+                  </button>
+                  <span style="color: var(--text-muted); font-size: 0.85rem;">ou</span>
+                  <label for="input-media-audio" class="speech-btn" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding: 10px 16px;">
+                    📁 Carregar Arquivo de Áudio
+                  </label>
+                  <input type="file" id="input-media-audio" accept="audio/*" class="form-input-file" style="display:none;">
+                </div>
+
+                <!-- PAINEL DE GRAVAÇÃO ATIVA -->
+                <div id="audio-recording-panel" class="audio-recording-panel" style="display:none;">
+                  <div class="recording-status-badge">
+                    <span class="recording-pulse"></span>
+                    <span id="recording-status-text">Gravando áudio com microfone...</span>
+                  </div>
+                  <div id="recording-timer" class="recording-timer-text">00:00 / 01:00</div>
+                  <div class="recording-progress-bar"><div id="recording-progress-fill" class="recording-progress-fill"></div></div>
+                  <div style="display: flex; gap: 10px; justify-content: center; margin-top: 12px;">
+                    <button type="button" id="btn-stop-audio-record" class="speech-btn" style="background: #EF4444; border-color: #EF4444; color: #fff; font-weight:800;">⏹️ Parar e Anexar</button>
+                    <button type="button" id="btn-cancel-audio-record" class="speech-btn" style="background: rgba(255,255,255,0.1); font-weight:700;">✖ Cancelar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PREVIEW DA MÍDIA SELECIONADA OU GRAVADA -->
+              <div id="media-preview-container" class="media-preview-container" style="display:none;">
+                <div class="preview-header">
+                  <span id="preview-title-badge" class="hero-tag tag-green">📷 Foto Selecionada</span>
+                  <button type="button" id="btn-remover-midia" class="speech-btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #FCA5A5; padding: 4px 12px; font-size: 0.8rem; font-weight: 700;">🗑️ Remover Mídia</button>
+                </div>
+                <div id="media-preview-body" class="preview-body"></div>
+              </div>
+
+              <!-- MENSAGEM DE ERRO DE DURAÇÃO/FORMATO -->
+              <div id="media-error-message" class="media-error-message" style="display:none;"></div>
+            </div>
           </div>
 
           <button type="submit" class="primary-action-btn" style="margin-top: 10px;">
