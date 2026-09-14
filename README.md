@@ -16,7 +16,7 @@ O **StopBullying** é um Progressive Web App (PWA) desenvolvido para combater o 
 3. **Módulo de Apoio Emocional**: Exercício de respiração guiada (Técnica 4-7-8), mensagens de incentivo e canais de ajuda 24h (CVV 188 e Disque 100).
 4. **Quiz Educativo & Estatísticas**: 10 perguntas baseadas na Lei Federal nº 13.185/2015 e estatísticas do INEP (28% dos estudantes).
 5. **Botão de Socorro Emergencial (SOS) com GPS**: Transmissão imediata de coordenadas GPS com mapa dinâmico.
-6. **Modo Camuflagem (Calculadora Neutra)**: Transforma a interface do app em uma calculadora funcional para uso discreto em situações de risco.
+6. **Modo Camuflagem (Jogo Pac-Man Retro Discreto)**: Transforma instantaneamente a interface do app em um jogo jogável de Pac-Man retrô para uso discreto em situações de risco.
 7. **Central Ceará Científico 2026**: Visualizador interativo em alta definição do Banner Oficial de Feira Científica (90 × 120 cm).
 8. **Suporte Offline completo (Service Worker)**: Funciona 100% sem internet via cache PWA e sincronização com Supabase / LocalStorage.
 
@@ -33,7 +33,10 @@ c:\Projeto Victor/
 ├── 🗄️ supabase_schema.sql             # Script SQL com Tabelas e RLS do Banco
 ├── ⚙️ sw.js                            # Service Worker para Funcionamento Offline
 ├── 📋 manifest.json                   # Web App Manifest PWA (Ícones e Atalhos)
-├── 🔒 gestaoequipestop.html           # Painel Gerencial da Equipe (Atalho sem Senha)
+├── 🔒 gestaoequipestop.html           # Painel Gerencial da Equipe (Atalho sem Senha: 'gestaoequipestop')
+├── 🛠️ CORRECAO_RLS_SUPABASE.sql       # Script de Correção Imediata de Políticas RLS
+├── 📖 DOCUMENTACAO_BANCO_DADOS.md     # Dicionário de Dados e Arquitetura Completa
+├── 📖 MANUAL_PAINEL_GESTAO.md         # Manual de Uso da Coordenação e Roteiro da Banca
 ├── 🖼️ banner_stopbullying_ceara_...html # Visualizador do Banner Científico 90x120cm
 ├── 🖼️ Stop Bullying.jpeg               # Logo e Favicon Oficial
 ├── 🖼️ Stop Bullying 2.jpeg             # Banner de Topo da Interface Mobile

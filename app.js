@@ -16,13 +16,31 @@ document.addEventListener('DOMContentLoaded', () => {
     ultimoProtocolo: 'STP-89F2A'
   };
 
-  // === ATALHO SECRETO PARA A GESTÃO ESCOLAR (Ctrl + Shift + G) ===
+  // === ATALHO SECRETO PARA A GESTÃO ESCOLAR ===
+  // 1. Digitação consecutiva da palavra-chave "gestaoequipestop"
+  let bufferTeclas = '';
+  const palavraChaveGestao = 'gestaoequipestop';
   document.addEventListener('keydown', (e) => {
+    // Atalho clássico Ctrl + Shift + G
     if (e.ctrlKey && e.shiftKey && (e.key === 'G' || e.key === 'g')) {
       e.preventDefault();
       window.open('gestaoequipestop.html', '_blank');
+      return;
+    }
+
+    // Detector de sequência de letras "gestaoequipestop"
+    if (e.key && e.key.length === 1) {
+      bufferTeclas += e.key.toLowerCase();
+      if (bufferTeclas.length > 30) {
+        bufferTeclas = bufferTeclas.slice(-30);
+      }
+      if (bufferTeclas.includes(palavraChaveGestao)) {
+        bufferTeclas = '';
+        window.location.href = 'gestaoequipestop.html';
+      }
     }
   });
+
 
   // BANCO DE FRASES MOTIVACIONAIS
   const frasesMotivacionais = [

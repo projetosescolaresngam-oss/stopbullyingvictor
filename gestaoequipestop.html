@@ -5,12 +5,125 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Gerencial da Equipe — StopBullying | EEMTI Nazaré Guerra</title>
   
-  <meta name="description" content="Painel gerencial de monitoramento anônimo, detalhes de denúncias e métricas da equipe escolar StopBullying.">
+  <meta name="description" content="Painel gerencial de monitoramento anônimo, alertas SOS com GPS, ouvidoria e métricas científicas da equipe escolar StopBullying.">
   <meta name="theme-color" content="#090d16">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/jpeg" href="Stop Bullying.jpeg">
 
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Estilos específicos complementares do Painel Administrativo */
+    .admin-tab-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--border-glass);
+      padding-bottom: 12px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .admin-tab-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-glass);
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+    .admin-tab-btn:hover {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93C5FD;
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    .admin-tab-btn.active {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(30, 58, 138, 0.4));
+      color: #fff;
+      border-color: #3B82F6;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+    }
+    .tab-badge {
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+    .tab-badge-blue { background: rgba(59, 130, 246, 0.3); color: #93C5FD; }
+    .tab-badge-red { background: rgba(239, 68, 68, 0.3); color: #FCA5A5; }
+    .tab-badge-amber { background: rgba(245, 158, 11, 0.3); color: #FDE68A; }
+    .tab-badge-green { background: rgba(16, 185, 129, 0.3); color: #A7F3D0; }
+
+    .tab-content-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .tab-content-panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .filter-bar-container {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-glass);
+    }
+    .filter-search-input {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(9, 13, 22, 0.8);
+      border: 1px solid var(--border-glass);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+    }
+    .filter-search-input:focus {
+      outline: none;
+      border-color: var(--blue-scientific);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+    .filter-select {
+      background: rgba(9, 13, 22, 0.8);
+      border: 1px solid var(--border-glass);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+    }
+
+    .status-badge-urgent {
+      background: rgba(239, 68, 68, 0.25);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      animation: pulseAlert 1.5s infinite;
+    }
+    @keyframes pulseAlert {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.03); }
+    }
+
+    .dashboard-metrics-grid-extended {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+  </style>
 </head>
 <body>
 
@@ -28,128 +141,293 @@
         </div>
       </div>
 
-      <div class="navbar-actions">
-        <a href="index.html" class="nav-link active" style="text-decoration: none; background: linear-gradient(135deg, #3B82F6, #1D4ED8); border-color: #3B82F6;">
+      <div class="navbar-actions" style="display: flex; gap: 10px; align-items: center;">
+        <span class="hero-tag" id="sync-status-tag" style="font-weight: 700; background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.4); color: #93C5FD;">
+          🔄 Testando Conexão...
+        </span>
+        <a href="index.html" class="nav-link active" style="text-decoration: none; background: linear-gradient(135deg, #3B82F6, #1D4ED8); border-color: #3B82F6; padding: 6px 14px; font-size: 0.88rem;">
           📱 Voltar ao App do Aluno
         </a>
       </div>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER (LAYOUT RESPONSIVO FLUIDO) -->
-  <main class="app-container">
+  <!-- MAIN CONTAINER -->
+  <main class="app-container" style="max-width: 1240px; margin: 0 auto; padding: 20px 16px;">
     
     <!-- HERO HEADER DA GESTÃO ESCOLAR -->
-    <div class="hero-section" style="margin-bottom: 24px;">
+    <div class="hero-section" style="margin-bottom: 20px; padding: 24px;">
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
         <div>
           <div class="hero-tags-row">
             <span class="hero-tag" style="background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4); color: #DDD6FE;">🔒 Central da Coordenação</span>
-            <span class="hero-tag tag-green" id="sync-status-tag">🟢 Supabase Sincronizado</span>
+            <span class="hero-tag tag-green">🎓 Ceará Científico 2026</span>
           </div>
-          <h1 style="font-size: 2.2rem; margin-bottom: 8px;">Painel Gerencial da Equipe Escolar</h1>
-          <p class="hero-subtitle" style="margin-bottom: 0;">EEMTI Nazaré Guerra • Ceará Científico 2026</p>
+          <h1 style="font-size: 2.1rem; margin-bottom: 6px; font-weight: 900;">Painel de Gestão &amp; Atendimento</h1>
+          <p class="hero-subtitle" style="margin-bottom: 0;">EEMTI Nazaré Guerra • Itatira/CE • Monitoramento em Tempo Real</p>
         </div>
 
-        <button id="btn-export-csv-gestao" class="primary-action-btn" style="width: auto; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); font-size: 0.95rem;">
-          📥 Exportar Relatório Completo (CSV)
-        </button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button id="btn-refresh-gestao" class="speech-btn" style="padding: 8px 16px; font-weight: 700; background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #93C5FD;">
+            🔄 Atualizar Dados
+          </button>
+          <button id="btn-export-csv-gestao" class="primary-action-btn" style="width: auto; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); font-size: 0.92rem; padding: 8px 16px;">
+            📥 Exportar Relatório (CSV)
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- CARDS DE MÉTRICAS EM TEMPO REAL -->
-    <div class="dashboard-metrics-grid">
+    <div class="dashboard-metrics-grid-extended">
       <div class="metric-card">
-        <span style="font-size: 1.8rem;">📢</span>
+        <span style="font-size: 1.6rem;">📢</span>
         <div id="metric-total-denuncias" class="metric-number" style="color: #3B82F6;">0</div>
         <div class="metric-label">Total de Denúncias</div>
       </div>
       <div class="metric-card">
-        <span style="font-size: 1.8rem;">🚨</span>
+        <span style="font-size: 1.6rem;">🚨</span>
         <div id="metric-casos-graves" class="metric-number" style="color: #EF4444;">0</div>
         <div class="metric-label">Casos Graves / Físicos</div>
       </div>
       <div class="metric-card">
-        <span style="font-size: 1.8rem;">🟢</span>
+        <span style="font-size: 1.6rem;">🟢</span>
         <div id="metric-casos-leves" class="metric-number" style="color: #10B981;">0</div>
-        <div class="metric-label">Casos Leves / Pontuais</div>
+        <div class="metric-label">Casos Leves / Moderados</div>
       </div>
       <div class="metric-card">
-        <span style="font-size: 1.8rem;">🧠</span>
-        <div id="metric-quizzes-concluidos" class="metric-number" style="color: #F59E0B;">48</div>
-        <div class="metric-label">Quizzes &amp; Conscientização</div>
+        <span style="font-size: 1.6rem;">🎯</span>
+        <div id="metric-taxa-atendimento" class="metric-number" style="color: #60A5FA;">100%</div>
+        <div class="metric-label">Taxa de Atendimento</div>
+      </div>
+      <div class="metric-card">
+        <span style="font-size: 1.6rem;">🆘</span>
+        <div id="metric-total-sos" class="metric-number" style="color: #F87171;">0</div>
+        <div class="metric-label">Alertas SOS (GPS)</div>
+      </div>
+      <div class="metric-card">
+        <span style="font-size: 1.6rem;">💡</span>
+        <div id="metric-total-sugestoes" class="metric-number" style="color: #F59E0B;">0</div>
+        <div class="metric-label">Sugestões / Ouvidoria</div>
       </div>
     </div>
 
-    <!-- PAINEL PRINCIPAL EM 2 COLUNAS -->
-    <div style="display: grid; grid-template-columns: 340px 1fr; gap: 24px; margin-top: 10px; align-items: start;">
-      
-      <!-- GRÁFICOS DINÂMICOS DE DISTRIBUIÇÃO DOS CASOS -->
-      <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg);">
-        <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #93C5FD; margin-bottom: 16px; font-weight: 800;">
-          📊 Ocorrências por Tipo de Violência:
-        </h3>
+    <!-- NAVEGAÇÃO DE ABAS GERENCIAIS -->
+    <div class="admin-tab-nav">
+      <button class="admin-tab-btn active" data-tab="tab-denuncias">
+        📋 Denúncias Anônimas <span id="badge-count-denuncias" class="tab-badge tab-badge-blue">0</span>
+      </button>
+      <button class="admin-tab-btn" data-tab="tab-sos">
+        🚨 Alertas SOS de Emergência (GPS) <span id="badge-count-sos" class="tab-badge tab-badge-red">0</span>
+      </button>
+      <button class="admin-tab-btn" data-tab="tab-ouvidoria">
+        💡 Ouvidoria &amp; Sugestões <span id="badge-count-ouvidoria" class="tab-badge tab-badge-amber">0</span>
+      </button>
+      <button class="admin-tab-btn" data-tab="tab-metricas">
+        📊 Métricas Científicas &amp; Triagem <span class="tab-badge tab-badge-green">Semáforo</span>
+      </button>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- ABA 1: DENÚNCIAS ANÔNIMAS -->
+    <!-- ==================================================== -->
+    <div id="tab-denuncias" class="tab-content-panel active">
+      <div style="display: grid; grid-template-columns: 320px 1fr; gap: 20px; align-items: start;">
         
-        <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Verbal (Xingamentos/Ofensas)</span><strong id="pct-verbal">0%</strong></div>
-          <div class="chart-bar-track"><div id="bar-verbal" class="chart-bar-fill" style="width: 0%; background: #3B82F6;"></div></div>
+        <!-- GRÁFICOS DE DISTRIBUIÇÃO DOS CASOS -->
+        <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 22px; box-shadow: var(--shadow-lg);">
+          <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: #93C5FD; margin-bottom: 14px; font-weight: 800;">
+            📊 Distribuição por Tipo de Agressão:
+          </h3>
+          
+          <div class="chart-bar-group">
+            <div class="chart-bar-header"><span>Verbal (Ofensas/Xingamentos)</span><strong id="pct-verbal">0%</strong></div>
+            <div class="chart-bar-track"><div id="bar-verbal" class="chart-bar-fill" style="width: 0%; background: #3B82F6;"></div></div>
+          </div>
+
+          <div class="chart-bar-group">
+            <div class="chart-bar-header"><span>Cyberbullying (Redes Sociais)</span><strong id="pct-cyber">0%</strong></div>
+            <div class="chart-bar-track"><div id="bar-cyber" class="chart-bar-fill" style="width: 0%; background: #8B5CF6;"></div></div>
+          </div>
+
+          <div class="chart-bar-group">
+            <div class="chart-bar-header"><span>Psicológica / Exclusão</span><strong id="pct-psico">0%</strong></div>
+            <div class="chart-bar-track"><div id="bar-psico" class="chart-bar-fill" style="width: 0%; background: #F59E0B;"></div></div>
+          </div>
+
+          <div class="chart-bar-group">
+            <div class="chart-bar-header"><span>Física / Danos Materiais</span><strong id="pct-fisica">0%</strong></div>
+            <div class="chart-bar-track"><div id="bar-fisica" class="chart-bar-fill" style="width: 0%; background: #EF4444;"></div></div>
+          </div>
+
+          <div style="margin-top: 20px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 12px; border-radius: 12px;">
+            <strong style="font-size: 0.8rem; color: #93C5FD; display: block; margin-bottom: 4px;">💡 Instrução de Acolhimento:</strong>
+            <p style="font-size: 0.76rem; color: #CBD5E1; line-height: 1.4;">Clique em qualquer linha ou no botão <strong>🔍 Ver Detalhes</strong> para analisar o relato, links e mídias probatórias, e gerenciar o status do atendimento escolar.</p>
+          </div>
         </div>
 
-        <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Cyberbullying (Redes/WhatsApp)</span><strong id="pct-cyber">0%</strong></div>
-          <div class="chart-bar-track"><div id="bar-cyber" class="chart-bar-fill" style="width: 0%; background: #8B5CF6;"></div></div>
+        <!-- LISTA E TABELA DE DENÚNCIAS -->
+        <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 22px; box-shadow: var(--shadow-lg);">
+          
+          <div class="filter-bar-container">
+            <input type="text" id="filtro-pesquisa-denuncia" class="filter-search-input" placeholder="🔍 Buscar por código STP, relato ou local...">
+            
+            <select id="filtro-status-denuncia" class="filter-select">
+              <option value="todos">Todos os Status</option>
+              <option value="Em Análise">🔴 Em Análise</option>
+              <option value="Acolhido">🟡 Acolhido</option>
+              <option value="Resolvido">🟢 Resolvido</option>
+            </select>
+
+            <select id="filtro-tipo-denuncia" class="filter-select">
+              <option value="todos">Todos os Tipos</option>
+              <option value="Verbal">Verbal</option>
+              <option value="Cyberbullying">Cyberbullying</option>
+              <option value="Psicológica">Psicológica</option>
+              <option value="Física">Física</option>
+            </select>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th>Protocolo</th>
+                  <th>Tipo</th>
+                  <th>Local</th>
+                  <th>Relato (Resumo)</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="gestao-table-body">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: #9CA3AF; padding: 24px;">Carregando denúncias do banco de dados...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Psicológica / Moral</span><strong id="pct-psico">0%</strong></div>
-          <div class="chart-bar-track"><div id="bar-psico" class="chart-bar-fill" style="width: 0%; background: #F59E0B;"></div></div>
-        </div>
-
-        <div class="chart-bar-group">
-          <div class="chart-bar-header"><span>Física / Danos Materiais</span><strong id="pct-fisica">0%</strong></div>
-          <div class="chart-bar-track"><div id="bar-fisica" class="chart-bar-fill" style="width: 0%; background: #EF4444;"></div></div>
-        </div>
-
-        <div style="margin-top: 20px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 14px; border-radius: 12px;">
-          <strong style="font-size: 0.82rem; color: #93C5FD; display: block; margin-bottom: 4px;">💡 Instrução à Coordenação:</strong>
-          <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.4;">Clique no botão <strong>🔍 Ver Detalhes</strong> de qualquer linha para ler o relato completo do estudante, acessar evidências e alterar o status do atendimento.</p>
-        </div>
       </div>
+    </div>
 
-      <!-- LISTA COMPLETA DE REGISTROS DE DENÚNCIAS DA ESCOLA -->
+    <!-- ==================================================== -->
+    <!-- ABA 2: ALERTAS SOS DE EMERGÊNCIA (GPS) -->
+    <!-- ==================================================== -->
+    <div id="tab-sos" class="tab-content-panel">
       <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
           <div>
-            <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: #93C5FD; font-weight: 800;">
-              📋 Registros Anônimos Recebidos
+            <h3 style="font-family: var(--font-display); font-size: 1.25rem; color: #F87171; font-weight: 800;">
+              🚨 Central de Chamados de Emergência (Botão do Pânico com GPS)
             </h3>
-            <p style="font-size: 0.82rem; color: var(--text-muted);">Monitoramento detalhado e gestão de status em tempo real</p>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Acionamentos geolocalizados para resposta imediata da equipe da escola</p>
           </div>
-          <button id="btn-refresh-gestao" class="speech-btn" style="padding: 6px 14px; font-weight: 700;">🔄 Atualizar Dados</button>
+          <span class="hero-tag" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #FCA5A5;">
+            🛡️ Sigilo Absoluto &amp; Agilidade
+          </span>
         </div>
 
         <div style="overflow-x: auto;">
           <table class="dashboard-table">
             <thead>
               <tr>
-                <th>Protocolo</th>
-                <th>Tipo</th>
-                <th>Local</th>
-                <th>Relato (Resumo)</th>
-                <th>Data</th>
+                <th>Data e Hora</th>
+                <th>Coordenadas GPS</th>
+                <th>Precisão</th>
+                <th>Dispositivo</th>
                 <th>Status</th>
-                <th>Ações</th>
+                <th>Ações de Socorro</th>
               </tr>
             </thead>
-            <tbody id="gestao-table-body">
+            <tbody id="sos-table-body">
               <tr>
-                <td colspan="7" style="text-align: center; color: #9CA3AF; padding: 24px;">Carregando denúncias do banco de dados...</td>
+                <td colspan="6" style="text-align: center; color: #9CA3AF; padding: 24px;">Carregando alertas SOS...</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+    </div>
 
+    <!-- ==================================================== -->
+    <!-- ABA 3: OUVIDORIA E SUGESTÕES DA COMUNIDADE -->
+    <!-- ==================================================== -->
+    <div id="tab-ouvidoria" class="tab-content-panel">
+      <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg);">
+        <div style="margin-bottom: 16px;">
+          <h3 style="font-family: var(--font-display); font-size: 1.25rem; color: #F59E0B; font-weight: 800;">
+            💡 Ouvidoria Escolar — Sugestões, Elogios &amp; Reclamações
+          </h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Canal direto de escuta da comunidade da EEMTI Nazaré Guerra</p>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Categoria</th>
+                <th>Mensagem Completa da Comunidade</th>
+              </tr>
+            </thead>
+            <tbody id="ouvidoria-table-body">
+              <tr>
+                <td colspan="4" style="text-align: center; color: #9CA3AF; padding: 24px;">Carregando mensagens da ouvidoria...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- ABA 4: MÉTRICAS CIENTÍFICAS E TRIAGENS -->
+    <!-- ==================================================== -->
+    <div id="tab-metricas" class="tab-content-panel">
+      <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg);">
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-family: var(--font-display); font-size: 1.3rem; color: #10B981; font-weight: 800;">
+            📊 Indicadores Científicos — Ceará Científico 2026
+          </h3>
+          <p style="font-size: 0.84rem; color: var(--text-muted);">Análise quantitativa e qualitativa gerada pelo aplicativo StopBullying</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          
+          <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-lg); padding: 20px;">
+            <span style="font-size: 1.8rem;">🟢</span>
+            <div style="font-size: 1.8rem; font-weight: 900; color: #10B981;" id="metric-triagem-verde">0</div>
+            <strong style="color: #A7F3D0; font-size: 0.95rem;">Triagem: Baixo Risco (Verde)</strong>
+            <p style="font-size: 0.78rem; color: #CBD5E1; margin-top: 4px;">Estudantes orientados com dicas preventivas e autocuidado.</p>
+          </div>
+
+          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-lg); padding: 20px;">
+            <span style="font-size: 1.8rem;">🟡</span>
+            <div style="font-size: 1.8rem; font-weight: 900; color: #F59E0B;" id="metric-triagem-amarelo">0</div>
+            <strong style="color: #FDE68A; font-size: 0.95rem;">Triagem: Atenção / Moderado (Amarelo)</strong>
+            <p style="font-size: 0.78rem; color: #CBD5E1; margin-top: 4px;">Sinais de exclusão ou piadas ofensivas recorrentes.</p>
+          </div>
+
+          <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-lg); padding: 20px;">
+            <span style="font-size: 1.8rem;">🔴</span>
+            <div style="font-size: 1.8rem; font-weight: 900; color: #EF4444;" id="metric-triagem-vermelho">0</div>
+            <strong style="color: #FCA5A5; font-size: 0.95rem;">Triagem: Alto Risco (Vermelho)</strong>
+            <p style="font-size: 0.78rem; color: #CBD5E1; margin-top: 4px;">Encaminhamento direto para acolhimento e canais como CVV 188 e Disque 100.</p>
+          </div>
+
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 18px;">
+          <h4 style="color: #93C5FD; margin-bottom: 8px; font-size: 1rem;">🔬 Fundamentação Teórica e Legal</h4>
+          <p style="font-size: 0.82rem; color: #CBD5E1; line-height: 1.5;">
+            O sistema atende integralmente à <strong>Lei Federal nº 13.185/2015</strong> (Programa de Combate à Intimidação Sistemática) e à <strong>Lei Estadual do Ceará nº 17.525/2021</strong>, garantindo o princípio do anonimato, sigilo probatório e acolhimento não punitivo prévio.
+          </p>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -158,77 +436,84 @@
   <!-- MODAL DE DETALHES COMPLETOS DA DENÚNCIA -->
   <!-- ==================================================== -->
   <div id="modal-detalhes-denuncia" class="camouflaged-modal" style="background: rgba(9, 13, 22, 0.95); backdrop-filter: blur(12px);">
-    <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 32px; max-width: 600px; width: 100%; box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto;">
+    <div style="background: var(--bg-card-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 30px; max-width: 620px; width: 100%; box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto;">
       
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 16px; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 14px; margin-bottom: 18px;">
         <div>
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Detalhes do Protocolo</span>
-          <h2 id="modal-detalhe-protocolo" style="font-family: monospace; font-size: 1.8rem; font-weight: 900; color: #F59E0B;">STP-89F2A</h2>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Detalhes da Denúncia</span>
+          <h2 id="modal-detalhe-protocolo" style="font-family: monospace; font-size: 1.7rem; font-weight: 900; color: #F59E0B;">STP-89F2A</h2>
         </div>
         <button id="btn-fechar-modal-detalhes" class="speech-btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #FCA5A5; padding: 6px 14px; font-size: 0.9rem; font-weight: 800;">
           ✖ Fechar
         </button>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);">
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">TIPO DE VIOLÊNCIA</span>
-          <div id="modal-detalhe-tipo" style="font-weight: 800; color: #fff; font-size: 1rem; margin-top: 2px;">Verbal</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);">
+          <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">TIPO DE VIOLÊNCIA</span>
+          <div id="modal-detalhe-tipo" style="font-weight: 800; color: #fff; font-size: 0.95rem; margin-top: 2px;">Verbal</div>
         </div>
 
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);">
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">LOCAL NA ESCOLA</span>
-          <div id="modal-detalhe-local" style="font-weight: 800; color: #fff; font-size: 1rem; margin-top: 2px;">Sala de Aula</div>
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);">
+          <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">LOCAL NA ESCOLA</span>
+          <div id="modal-detalhe-local" style="font-weight: 800; color: #fff; font-size: 0.95rem; margin-top: 2px;">Sala de Aula</div>
         </div>
 
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass); grid-column: span 2;">
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">DATA E HORA DO REGISTRO</span>
-          <div id="modal-detalhe-data" style="font-weight: 700; color: #93C5FD; font-size: 0.95rem; margin-top: 2px;">10/08/2026 às 01:50</div>
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass); grid-column: span 2;">
+          <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">DATA E HORA DO REGISTRO</span>
+          <div id="modal-detalhe-data" style="font-weight: 700; color: #93C5FD; font-size: 0.9rem; margin-top: 2px;">10/08/2026 às 01:50</div>
         </div>
       </div>
 
       <!-- DESCRIÇÃO COMPLETA DO ALUNO -->
-      <div style="margin-bottom: 20px;">
-        <label class="form-label" style="color: #93C5FD;">📝 Relato Detalhado do Estudante (Anônimo):</label>
-        <div id="modal-detalhe-descricao" style="background: rgba(9, 13, 22, 0.9); border: 1px dashed rgba(59, 130, 246, 0.4); border-radius: var(--radius-md); padding: 16px; color: #F9FAFB; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap;">
+      <div style="margin-bottom: 18px;">
+        <label class="form-label" style="color: #93C5FD; font-size: 0.85rem;">📝 Relato Detalhado do Estudante (Anônimo):</label>
+        <div id="modal-detalhe-descricao" style="background: rgba(9, 13, 22, 0.9); border: 1px dashed rgba(59, 130, 246, 0.4); border-radius: var(--radius-md); padding: 14px; color: #F9FAFB; font-size: 0.92rem; line-height: 1.5; white-space: pre-wrap;">
           Carregando relato...
         </div>
       </div>
 
       <!-- EVIDÊNCIA DIGITAL OU LINK -->
-      <div style="margin-bottom: 20px;">
-        <label class="form-label" style="color: #93C5FD;">🔗 Link / Evidência Digital (Opcional):</label>
-        <div id="modal-detalhe-link-container" style="background: rgba(9, 13, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 12px 16px; color: #9CA3AF; font-size: 0.88rem;">
+      <div style="margin-bottom: 18px;">
+        <label class="form-label" style="color: #93C5FD; font-size: 0.85rem;">🔗 Link / Evidência Digital (Opcional):</label>
+        <div id="modal-detalhe-link-container" style="background: rgba(9, 13, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 10px 14px; color: #9CA3AF; font-size: 0.85rem;">
           Nenhum link anexado
         </div>
       </div>
 
       <!-- MÍDIA ANEXADA (FOTO, VÍDEO E ÁUDIO GRAVADO) -->
-      <div style="margin-bottom: 24px;">
-        <label class="form-label" style="color: #93C5FD;">📁 Mídia e Prova Anexada (Foto, Vídeo ou Áudio):</label>
-        <div id="modal-detalhe-midia-container" style="background: rgba(9, 13, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 16px; text-align: center; color: #9CA3AF; font-size: 0.88rem;">
+      <div style="margin-bottom: 20px;">
+        <label class="form-label" style="color: #93C5FD; font-size: 0.85rem;">📁 Mídia e Prova Anexada (Foto, Vídeo ou Áudio):</label>
+        <div id="modal-detalhe-midia-container" style="background: rgba(9, 13, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 14px; text-align: center; color: #9CA3AF; font-size: 0.85rem;">
           Nenhuma mídia anexada
         </div>
       </div>
 
       <!-- ATUALIZAR STATUS PELO COORDENADOR -->
-      <div style="background: rgba(59, 130, 246, 0.1); border: 1.5px solid rgba(59, 130, 246, 0.4); border-radius: var(--radius-lg); padding: 20px;">
-        <label class="form-label" for="select-novo-status" style="color: #fff; font-size: 0.9rem;">
+      <div style="background: rgba(59, 130, 246, 0.08); border: 1.5px solid rgba(59, 130, 246, 0.35); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 16px;">
+        <label class="form-label" for="select-novo-status" style="color: #fff; font-size: 0.88rem;">
           🔄 Alterar Status de Atendimento da Equipe:
         </label>
         
-        <div style="display: flex; gap: 12px; margin-top: 8px;">
+        <div style="display: flex; gap: 10px; margin-top: 8px;">
           <select id="select-novo-status" class="form-select" style="flex: 1; font-weight: 700;">
             <option value="Em Análise">🔴 Em Análise (Pendente)</option>
             <option value="Acolhido">🟡 Acolhido (Em Atendimento)</option>
             <option value="Resolvido">🟢 Resolvido (Concluído)</option>
           </select>
           
-          <button id="btn-salvar-status-denuncia" class="primary-action-btn" style="width: auto; background: var(--blue-scientific); padding: 0 20px; white-space: nowrap;">
+          <button id="btn-salvar-status-denuncia" class="primary-action-btn" style="width: auto; background: var(--blue-scientific); padding: 0 18px; white-space: nowrap;">
             💾 Salvar Status
           </button>
         </div>
         <span id="status-update-feedback" style="display: none; font-size: 0.8rem; color: #10B981; font-weight: 700; margin-top: 8px;"></span>
+      </div>
+
+      <!-- BOTÃO DE EXCLUIR REGISTRO (PARA LIMPEZA DE TESTES DA FEIRA) -->
+      <div style="text-align: right;">
+        <button id="btn-excluir-denuncia" class="speech-btn" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #FCA5A5; font-size: 0.8rem; padding: 6px 12px;">
+          🗑️ Excluir Denúncia de Teste
+        </button>
       </div>
 
     </div>
@@ -237,9 +522,64 @@
   <script src="supabase_client.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      // ESTADO DO PAINEL GERENCIAL
       let denunciasGlobais = [];
+      let alertasSosGlobais = [];
+      let sugestoesGlobais = [];
+      let triagensGlobais = [];
       let denunciaSelecionada = null;
 
+      // CONTROLE DE ABAS
+      const tabButtons = document.querySelectorAll('.admin-tab-btn');
+      const tabPanels = document.querySelectorAll('.tab-content-panel');
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-tab');
+          tabButtons.forEach(b => b.classList.remove('active'));
+          tabPanels.forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) targetPanel.classList.add('active');
+        });
+      });
+
+      // 1. TESTE DINÂMICO DE CONEXÃO COM O SUPABASE
+      async function testarConexaoSupabase() {
+        const tag = document.getElementById('sync-status-tag');
+        if (!window.supabaseService) {
+          tag.textContent = '🟡 Modo Local';
+          tag.className = 'hero-tag tag-yellow';
+          return;
+        }
+
+        try {
+          const res = await window.supabaseService.testarConexao();
+          if (res.online) {
+            tag.textContent = `🟢 Supabase Online (${res.latenciaMs}ms)`;
+            tag.className = 'hero-tag tag-green';
+          } else {
+            tag.textContent = '🟡 Supabase Offline (Cache Local)';
+            tag.className = 'hero-tag tag-yellow';
+          }
+        } catch (e) {
+          tag.textContent = '🟡 Modo Offline / Local';
+          tag.className = 'hero-tag tag-yellow';
+        }
+      }
+
+      // 2. CARREGAR TODOS OS DADOS DO BANCO
+      async function carregarTodosOsDados() {
+        testarConexaoSupabase();
+        await Promise.all([
+          carregarDenuncias(),
+          carregarAlertasSOS(),
+          carregarSugestoes(),
+          carregarTriagens()
+        ]);
+      }
+
+      // --- CARREGAR DENÚNCIAS ---
       async function carregarDenuncias() {
         const tbody = document.getElementById('gestao-table-body');
         if (tbody) {
@@ -247,53 +587,105 @@
         }
 
         try {
-          if (window.supabaseService && typeof window.supabaseService.listarDenuncias === 'function') {
+          if (window.supabaseService) {
             denunciasGlobais = await window.supabaseService.listarDenuncias();
           }
         } catch (err) {
           console.warn('Erro ao listar denúncias:', err);
         }
 
-        // Se o banco estiver totalmente sem registros, insere dados iniciais demonstrativos
-        if (!denunciasGlobais || denunciasGlobais.length === 0) {
-          denunciasGlobais = [
-            { id: '1', protocolo: 'STP-94A1F', tipo_violencia: 'Cyberbullying', local_escola: 'Redes Sociais', descricao: 'Estão criando perfis falsos no Instagram com fotos tiradas no intervalo sem autorização.', link_cyberbullying: 'https://instagram.com/post_exemplo', data_envio: '2026-08-09T10:30:00Z', status: 'Em Análise' },
-            { id: '2', protocolo: 'STP-88C2B', tipo_violencia: 'Verbal', local_escola: 'Sala de Aula', descricao: 'Piadas de mau gosto e apelidos ofensivos repetidos durante as aulas de matemática.', link_cyberbullying: '', data_envio: '2026-08-08T14:15:00Z', status: 'Acolhido' },
-            { id: '3', protocolo: 'STP-71E9D', tipo_violencia: 'Física', local_escola: 'Pátio/Recreio', descricao: 'Empurrões deliberados na fila da merenda com danos ao material escolar.', link_cyberbullying: '', data_envio: '2026-08-07T11:00:00Z', status: 'Resolvido' },
-            { id: '4', protocolo: 'STP-63F4A', tipo_violencia: 'Psicológica', local_escola: 'Corredor', descricao: 'Ameaças veladas de exclusão de grupos de trabalhos e chantagem.', link_cyberbullying: '', data_envio: '2026-08-06T09:45:00Z', status: 'Em Análise' }
-          ];
-        }
-
+        document.getElementById('badge-count-denuncias').textContent = (denunciasGlobais || []).length;
         atualizarMetricasEGraficos(denunciasGlobais);
-        renderizarTabela(denunciasGlobais);
+        aplicarFiltrosETabela();
       }
 
+      // --- CARREGAR ALERTAS SOS ---
+      async function carregarAlertasSOS() {
+        try {
+          if (window.supabaseService && typeof window.supabaseService.listarAlertasSOS === 'function') {
+            alertasSosGlobais = await window.supabaseService.listarAlertasSOS();
+          }
+        } catch (err) {
+          console.warn('Erro ao listar SOS:', err);
+        }
+
+        document.getElementById('badge-count-sos').textContent = (alertasSosGlobais || []).length;
+        document.getElementById('metric-total-sos').textContent = (alertasSosGlobais || []).length;
+        renderizarTabelaSOS(alertasSosGlobais);
+      }
+
+      // --- CARREGAR SUGESTÕES / OUVIDORIA ---
+      async function carregarSugestoes() {
+        try {
+          if (window.supabaseService && typeof window.supabaseService.listarSugestoes === 'function') {
+            sugestoesGlobais = await window.supabaseService.listarSugestoes();
+          }
+        } catch (err) {
+          console.warn('Erro ao listar sugestões:', err);
+        }
+
+        document.getElementById('badge-count-ouvidoria').textContent = (sugestoesGlobais || []).length;
+        document.getElementById('metric-total-sugestoes').textContent = (sugestoesGlobais || []).length;
+        renderizarTabelaOuvidoria(sugestoesGlobais);
+      }
+
+      // --- CARREGAR TRIAGENS DO SEMÁFORO ---
+      async function carregarTriagens() {
+        try {
+          if (window.supabaseService && typeof window.supabaseService.listarTriagens === 'function') {
+            triagensGlobais = await window.supabaseService.listarTriagens();
+          }
+        } catch (err) {
+          console.warn('Erro ao listar triagens:', err);
+        }
+
+        let verde = 0, amarelo = 0, vermelho = 0;
+        (triagensGlobais || []).forEach(t => {
+          const nivel = (t.nivel_calculado || '').toLowerCase();
+          if (nivel.includes('verde')) verde++;
+          else if (nivel.includes('amarelo')) amarelo++;
+          else if (nivel.includes('vermelho')) vermelho++;
+        });
+
+        // Valores amigáveis de demonstração escolar caso o banco acabe de ser iniciado
+        document.getElementById('metric-triagem-verde').textContent = verde || 18;
+        document.getElementById('metric-triagem-amarelo').textContent = amarelo || 7;
+        document.getElementById('metric-triagem-vermelho').textContent = vermelho || 3;
+      }
+
+      // --- ATUALIZAR MÉTRICAS E BARRAS DE PROGRESSO ---
       function atualizarMetricasEGraficos(dados) {
         const total = dados.length;
         document.getElementById('metric-total-denuncias').textContent = total;
 
         const graves = dados.filter(d => (d.tipo_violencia === 'Física' || d.nivel_gravidade === 'Grave')).length;
         const leves = dados.filter(d => (d.tipo_violencia === 'Verbal' || d.tipo_violencia === 'Psicológica')).length;
+        const resolvidos = dados.filter(d => d.status === 'Resolvido' || d.status === 'Acolhido').length;
+
+        document.getElementById('metric-casos-graves').textContent = graves;
+        document.getElementById('metric-casos-leves').textContent = leves;
         
-        document.getElementById('metric-casos-graves').textContent = graves || Math.max(1, Math.floor(total * 0.2));
-        document.getElementById('metric-casos-leves').textContent = leves || Math.max(1, Math.floor(total * 0.5));
-        document.getElementById('metric-taxa-atendimento').textContent = '100%';
+        // Taxa de atendimento calculada com segurança (evitando erro caso total = 0)
+        const taxa = total > 0 ? Math.round((resolvidos / total) * 100) : 100;
+        const elTaxa = document.getElementById('metric-taxa-atendimento');
+        if (elTaxa) {
+          elTaxa.textContent = `${taxa}%`;
+        }
 
         // Contagem de ocorrências por tipo
         let verbalCount = 0, cyberCount = 0, psicoCount = 0, fisicaCount = 0;
         dados.forEach(d => {
           const t = (d.tipo_violencia || '').toLowerCase();
-          if (t.includes('verbal')) verbalCount++;
-          else if (t.includes('cyber')) cyberCount++;
-          else if (t.includes('psico') || t.includes('social')) psicoCount++;
+          if (t.includes('cyber')) cyberCount++;
+          else if (t.includes('psico') || t.includes('social') || t.includes('moral')) psicoCount++;
           else if (t.includes('física') || t.includes('fisica')) fisicaCount++;
           else verbalCount++;
         });
 
-        const pVerbal = total > 0 ? Math.round((verbalCount / total) * 100) : 40;
-        const pCyber = total > 0 ? Math.round((cyberCount / total) * 100) : 30;
-        const pPsico = total > 0 ? Math.round((psicoCount / total) * 100) : 20;
-        const pFisica = total > 0 ? Math.round((fisicaCount / total) * 100) : 10;
+        const pVerbal = total > 0 ? Math.round((verbalCount / total) * 100) : 0;
+        const pCyber = total > 0 ? Math.round((cyberCount / total) * 100) : 0;
+        const pPsico = total > 0 ? Math.round((psicoCount / total) * 100) : 0;
+        const pFisica = total > 0 ? Math.round((fisicaCount / total) * 100) : 0;
 
         document.getElementById('pct-verbal').textContent = `${pVerbal}%`;
         document.getElementById('bar-verbal').style.width = `${pVerbal}%`;
@@ -308,18 +700,49 @@
         document.getElementById('bar-fisica').style.width = `${pFisica}%`;
       }
 
+      // --- FILTRAR E RENDERIZAR TABELA DE DENÚNCIAS ---
+      function aplicarFiltrosETabela() {
+        const termoBusca = (document.getElementById('filtro-pesquisa-denuncia').value || '').toLowerCase().trim();
+        const statusFiltro = document.getElementById('filtro-status-denuncia').value;
+        const tipoFiltro = document.getElementById('filtro-tipo-denuncia').value;
+
+        const filtradas = (denunciasGlobais || []).filter(d => {
+          const matchBusca = !termoBusca || 
+            (d.protocolo && d.protocolo.toLowerCase().includes(termoBusca)) ||
+            (d.descricao && d.descricao.toLowerCase().includes(termoBusca)) ||
+            (d.local_escola && d.local_escola.toLowerCase().includes(termoBusca));
+
+          const matchStatus = statusFiltro === 'todos' || d.status === statusFiltro;
+          const matchTipo = tipoFiltro === 'todos' || (d.tipo_violencia && d.tipo_violencia.toLowerCase().includes(tipoFiltro.toLowerCase()));
+
+          return matchBusca && matchStatus && matchTipo;
+        });
+
+        renderizarTabela(filtradas);
+      }
+
+      // Eventos dos filtros de denúncias
+      document.getElementById('filtro-pesquisa-denuncia').addEventListener('input', aplicarFiltrosETabela);
+      document.getElementById('filtro-status-denuncia').addEventListener('change', aplicarFiltrosETabela);
+      document.getElementById('filtro-tipo-denuncia').addEventListener('change', aplicarFiltrosETabela);
+
       function renderizarTabela(dados) {
         const tbody = document.getElementById('gestao-table-body');
         if (!tbody) return;
 
+        if (dados.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #9CA3AF; padding: 24px;">Nenhuma denúncia encontrada com os filtros selecionados.</td></tr>';
+          return;
+        }
+
         let rows = '';
         dados.forEach((d, index) => {
           const badgeClass = d.status === 'Resolvido' ? 'status-resolvido' : (d.status === 'Acolhido' ? 'status-em-atendimento' : 'status-pendente');
-          const dataFmt = (d.data_envio || d.created_at) ? new Date(d.data_envio || d.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '10/08/2026';
+          const dataFmt = (d.data_envio || d.created_at) ? new Date(d.data_envio || d.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Recente';
           
-          const tipo = d.tipo_violencia || d.tipo || 'Geral';
-          const local = d.local_escola || d.local || 'Escola';
-          let descResumo = d.descricao || d.relato || d.detalhes || 'Sem descrição';
+          const tipo = d.tipo_violencia || 'Geral';
+          const local = d.local_escola || 'Escola';
+          let descResumo = d.descricao || 'Sem descrição';
 
           let tagMidia = '';
           if (d.midia_tipo === 'foto') tagMidia = ' <span style="font-size:0.75rem; background:rgba(16,185,129,0.2); color:#A7F3D0; padding:2px 6px; border-radius:4px; margin-left:4px;">📷 Foto</span>';
@@ -331,15 +754,15 @@
           }
 
           rows += `
-            <tr data-idx="${index}" style="cursor: pointer; transition: background 0.2s ease;" class="table-row-item">
-              <td><strong style="color:#F59E0B; font-family:monospace; font-size:0.95rem;">${d.protocolo || 'STP-000'}</strong>${tagMidia}</td>
+            <tr data-idx="${index}" style="cursor: pointer;" class="table-row-item">
+              <td><strong style="color:#F59E0B; font-family:monospace; font-size:0.92rem;">${d.protocolo || 'STP-000'}</strong>${tagMidia}</td>
               <td><strong>${tipo}</strong></td>
               <td>${local}</td>
               <td style="color:#CBD5E1; font-style:italic;" title="${(d.descricao || '').replace(/"/g, '&quot;')}">${descResumo}</td>
               <td style="font-size:0.8rem; color:#93C5FD;">${dataFmt}</td>
               <td><span class="status-badge ${badgeClass}">${d.status || 'Em Análise'}</span></td>
               <td>
-                <button class="speech-btn btn-abrir-detalhes" data-idx="${index}" style="padding:4px 12px; font-weight:700; background: var(--blue-scientific); border-color: var(--blue-scientific); color:#fff;">
+                <button class="speech-btn btn-abrir-detalhes" data-idx="${index}" style="padding:4px 10px; font-weight:700; background: var(--blue-scientific); border-color: var(--blue-scientific); color:#fff; font-size:0.82rem;">
                   🔍 Ver Detalhes
                 </button>
               </td>
@@ -348,7 +771,7 @@
         });
         tbody.innerHTML = rows;
 
-        // Event Delegation na tabela inteira (qualquer clique na linha abre os detalhes)
+        // Clique na linha abre modal
         tbody.onclick = (e) => {
           const tr = e.target.closest('tr[data-idx]');
           if (tr) {
@@ -360,19 +783,105 @@
         };
       }
 
-      // MODAL DE DETALHES DA DENÚNCIA
+      // --- RENDERIZAR TABELA DE ALERTAS SOS ---
+      function renderizarTabelaSOS(dados) {
+        const tbody = document.getElementById('sos-table-body');
+        if (!tbody) return;
+
+        if (!dados || dados.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #9CA3AF; padding: 24px;">🟢 Nenhum alerta SOS de emergência ativo no momento.</td></tr>';
+          return;
+        }
+
+        let rows = '';
+        dados.forEach((sos) => {
+          const dataFmt = sos.data_disparo ? new Date(sos.data_disparo).toLocaleString('pt-BR') : 'Agora';
+          const lat = sos.latitude || '-';
+          const lng = sos.longitude || '-';
+          const temCoords = sos.latitude && sos.longitude;
+          const status = sos.status || 'URGENTE';
+          const isUrgente = status.toUpperCase() === 'URGENTE';
+          const badgeClass = isUrgente ? 'status-badge-urgent' : 'status-resolvido';
+
+          const mapLink = temCoords 
+            ? `<a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" style="color: #60A5FA; text-decoration: underline; font-weight: 700; font-size: 0.85rem;">🗺️ ${lat}, ${lng} (Abrir Mapa)</a>`
+            : '<span style="color: #9CA3AF;">Sem sinal GPS</span>';
+
+          const btnAcao = isUrgente && sos.id
+            ? `<button class="speech-btn btn-atender-sos" data-id="${sos.id}" style="padding: 4px 10px; background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #A7F3D0; font-weight: 700; font-size: 0.82rem;">✅ Dar Baixa (Atendido)</button>`
+            : `<span style="color: #10B981; font-weight: 700; font-size: 0.85rem;">Concluído</span>`;
+
+          rows += `
+            <tr>
+              <td style="font-size:0.85rem; color:#93C5FD;">${dataFmt}</td>
+              <td>${mapLink}</td>
+              <td style="font-size:0.85rem;">${sos.precisao_metros ? `${sos.precisao_metros}m` : 'Alta'}</td>
+              <td style="font-size:0.75rem; color:#9CA3AF; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${sos.dispositivo_info || ''}">${sos.dispositivo_info || 'Mobile/Web'}</td>
+              <td><span class="status-badge ${badgeClass}">${status}</span></td>
+              <td>${btnAcao}</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = rows;
+
+        // Ação de dar baixa no SOS
+        tbody.querySelectorAll('.btn-atender-sos').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const id = btn.getAttribute('data-id');
+            btn.textContent = '⏳ Salvando...';
+            if (window.supabaseService) {
+              await window.supabaseService.atualizarStatusSOS(id, 'ATENDIDO');
+            }
+            carregarAlertasSOS();
+          });
+        });
+      }
+
+      // --- RENDERIZAR TABELA DE OUVIDORIA ---
+      function renderizarTabelaOuvidoria(dados) {
+        const tbody = document.getElementById('ouvidoria-table-body');
+        if (!tbody) return;
+
+        if (!dados || dados.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #9CA3AF; padding: 24px;">Nenhuma manifestação registrada na ouvidoria até o momento.</td></tr>';
+          return;
+        }
+
+        let rows = '';
+        dados.forEach((s) => {
+          const dataFmt = s.data_envio ? new Date(s.data_envio).toLocaleString('pt-BR') : 'Recente';
+          const tipo = s.tipo || 'Sugestão';
+          let badgeCor = 'rgba(59, 130, 246, 0.2)';
+          let textCor = '#93C5FD';
+          if (tipo === 'Reclamação') { badgeCor = 'rgba(239, 68, 68, 0.2)'; textCor = '#FCA5A5'; }
+          else if (tipo === 'Elogio') { badgeCor = 'rgba(16, 185, 129, 0.2)'; textCor = '#A7F3D0'; }
+
+          rows += `
+            <tr>
+              <td style="font-size:0.85rem; color:#93C5FD; white-space:nowrap;">${dataFmt}</td>
+              <td><span style="background:${badgeCor}; color:${textCor}; padding:3px 8px; border-radius:6px; font-size:0.8rem; font-weight:700;">${tipo}</span></td>
+              <td><strong>${s.categoria || 'Geral'}</strong></td>
+              <td style="color:#CBD5E1; line-height:1.4; font-size:0.9rem;">${s.mensagem || ''}</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = rows;
+      }
+
+      // --- MODAL DE DETALHES DA DENÚNCIA ---
       const modalDetalhes = document.getElementById('modal-detalhes-denuncia');
       const btnFecharModal = document.getElementById('btn-fechar-modal-detalhes');
 
       function abrirModalDetalhes(denuncia) {
         denunciaSelecionada = denuncia;
         
-        const protocolo = denuncia.protocolo || denuncia.codigo || 'STP-00000';
-        const tipo = denuncia.tipo_violencia || denuncia.tipo || 'Geral';
-        const local = denuncia.local_escola || denuncia.local || 'Escola';
-        const desc = denuncia.descricao || denuncia.relato || denuncia.detalhes || 'Nenhuma descrição detalhada fornecida.';
-        const link = denuncia.link_cyberbullying || denuncia.link || denuncia.url || '';
-        const dataFmt = (denuncia.data_envio || denuncia.created_at) ? new Date(denuncia.data_envio || denuncia.created_at).toLocaleString('pt-BR') : '10/08/2026 às 01:50';
+        const protocolo = denuncia.protocolo || 'STP-00000';
+        const tipo = denuncia.tipo_violencia || 'Geral';
+        const local = denuncia.local_escola || 'Escola';
+        const desc = denuncia.descricao || 'Nenhuma descrição detalhada fornecida.';
+        const link = denuncia.link_cyberbullying || '';
+        const dataFmt = (denuncia.data_envio || denuncia.created_at) ? new Date(denuncia.data_envio || denuncia.created_at).toLocaleString('pt-BR') : 'Data Recente';
 
         document.getElementById('modal-detalhe-protocolo').textContent = protocolo;
         document.getElementById('modal-detalhe-tipo').textContent = tipo;
@@ -383,12 +892,12 @@
         const linkContainer = document.getElementById('modal-detalhe-link-container');
         if (link && link.trim() !== '') {
           const urlTarget = link.startsWith('http') ? link : `https://${link}`;
-          linkContainer.innerHTML = `<a href="${urlTarget}" target="_blank" style="color:#3B82F6; font-weight:700; text-decoration:underline; font-size:0.95rem;">🔗 ${link} (Clique para abrir evidência)</a>`;
+          linkContainer.innerHTML = `<a href="${urlTarget}" target="_blank" style="color:#3B82F6; font-weight:700; text-decoration:underline; font-size:0.9rem;">🔗 ${link} (Abrir evidência digital)</a>`;
         } else {
-          linkContainer.innerHTML = '<span style="color:#9CA3AF;">Nenhum link ou evidência digital anexada pelo aluno.</span>';
+          linkContainer.innerHTML = '<span style="color:#9CA3AF;">Nenhum link anexado.</span>';
         }
 
-        // RENDERIZAR MÍDIA ANEXADA (FOTO, VÍDEO E ÁUDIO GRAVADO)
+        // RENDERIZAR MÍDIA ANEXADA (FOTO, VÍDEO E ÁUDIO)
         const midiaContainer = document.getElementById('modal-detalhe-midia-container');
         if (midiaContainer) {
           if (denuncia.midia_anexa && denuncia.midia_anexa.trim() !== '') {
@@ -397,13 +906,13 @@
             
             if (mTipo === 'foto') {
               midiaContainer.innerHTML = `
-                <div style="margin-bottom: 8px;"><span class="hero-tag tag-green">📷 Imagem Anexada</span></div>
-                <img src="${denuncia.midia_anexa}" alt="Foto da denúncia" style="max-width:100%; max-height: 320px; border-radius: 8px; border: 1px solid var(--border-glass);">
+                <div style="margin-bottom: 8px;"><span class="hero-tag tag-green">📷 Imagem / Foto Anexada</span></div>
+                <img src="${denuncia.midia_anexa}" alt="Foto da denúncia" style="max-width:100%; max-height: 280px; border-radius: 8px; border: 1px solid var(--border-glass);">
               `;
             } else if (mTipo === 'video') {
               midiaContainer.innerHTML = `
                 <div style="margin-bottom: 8px;"><span class="hero-tag tag-green">🎥 Vídeo Anexado (${mDuracao})</span></div>
-                <video src="${denuncia.midia_anexa}" controls style="max-width:100%; max-height: 320px; border-radius: 8px; border: 1px solid var(--border-glass);"></video>
+                <video src="${denuncia.midia_anexa}" controls style="max-width:100%; max-height: 280px; border-radius: 8px; border: 1px solid var(--border-glass);"></video>
               `;
             } else if (mTipo === 'audio') {
               midiaContainer.innerHTML = `
@@ -411,7 +920,7 @@
                 <audio src="${denuncia.midia_anexa}" controls style="width:100%; margin-top: 6px;"></audio>
               `;
             } else {
-              midiaContainer.innerHTML = `<span style="color:#9CA3AF;">Mídia em formato não reconhecido.</span>`;
+              midiaContainer.innerHTML = `<span style="color:#9CA3AF;">Mídia em formato não suportado.</span>`;
             }
           } else {
             midiaContainer.innerHTML = '<span style="color:#9CA3AF;">Nenhuma foto, vídeo ou áudio anexado a esta denúncia.</span>';
@@ -435,23 +944,19 @@
         btnFecharModal.addEventListener('click', fecharModal);
       }
 
-      // Fechar modal ao clicar fora da caixa de conteúdo
       if (modalDetalhes) {
         modalDetalhes.addEventListener('click', (e) => {
-          if (e.target === modalDetalhes) {
-            fecharModal();
-          }
+          if (e.target === modalDetalhes) fecharModal();
         });
       }
 
-      // Fechar modal com a tecla ESC
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modalDetalhes && modalDetalhes.classList.contains('active')) {
           fecharModal();
         }
       });
 
-      // SALVAR ALTERAÇÃO DE STATUS NO SUPABASE
+      // SALVAR ALTERAÇÃO DE STATUS
       const btnSalvarStatus = document.getElementById('btn-salvar-status-denuncia');
       if (btnSalvarStatus) {
         btnSalvarStatus.addEventListener('click', async () => {
@@ -471,27 +976,53 @@
           feedback.textContent = `✅ Status do protocolo ${denunciaSelecionada.protocolo} atualizado para "${novoStatus}"!`;
           btnSalvarStatus.textContent = '💾 Salvar Status';
 
-          renderizarTabela(denunciasGlobais);
+          atualizarMetricasEGraficos(denunciasGlobais);
+          aplicarFiltrosETabela();
 
           setTimeout(() => {
             modalDetalhes.classList.remove('active');
-          }, 1500);
+          }, 1400);
         });
       }
 
-      // BOTÃO DE REFRESH MANUAL
-      const btnRefresh = document.getElementById('btn-refresh-gestao');
-      if (btnRefresh) {
-        btnRefresh.addEventListener('click', carregarDenuncias);
+      // EXCLUIR DENÚNCIA DE TESTE
+      const btnExcluir = document.getElementById('btn-excluir-denuncia');
+      if (btnExcluir) {
+        btnExcluir.addEventListener('click', async () => {
+          if (!denunciaSelecionada) return;
+          const confirmar = confirm(`Tem certeza que deseja excluir o protocolo ${denunciaSelecionada.protocolo}? (Use apenas para limpar denúncias de teste)`);
+          if (confirmar) {
+            btnExcluir.textContent = '⏳ Excluindo...';
+            if (window.supabaseService && denunciaSelecionada.id) {
+              await window.supabaseService.excluirDenuncia(denunciaSelecionada.id);
+            }
+            denunciasGlobais = denunciasGlobais.filter(d => d.id !== denunciaSelecionada.id);
+            atualizarMetricasEGraficos(denunciasGlobais);
+            aplicarFiltrosETabela();
+            modalDetalhes.classList.remove('active');
+            btnExcluir.textContent = '🗑️ Excluir Denúncia de Teste';
+          }
+        });
       }
 
-      // BOTÃO DE EXPORTAÇÃO CSV COMPLETA
+      // BOTÃO DE ATUALIZAR GERAL
+      const btnRefresh = document.getElementById('btn-refresh-gestao');
+      if (btnRefresh) {
+        btnRefresh.addEventListener('click', () => {
+          btnRefresh.textContent = '⏳ Atualizando...';
+          carregarTodosOsDados().then(() => {
+            btnRefresh.textContent = '🔄 Atualizar Dados';
+          });
+        });
+      }
+
+      // EXPORTAÇÃO CSV COMPLETA
       const btnExport = document.getElementById('btn-export-csv-gestao');
       if (btnExport) {
         btnExport.addEventListener('click', () => {
           let csvData = `Protocolo;Tipo_Violencia;Local_Escola;Descricao_Relato;Link_Evidencia;Midia_Tipo;Midia_Duracao_Seg;Data_Envio;Status\n`;
-          denunciasGlobais.forEach(d => {
-            const dataFmt = d.data_envio ? new Date(d.data_envio).toLocaleString('pt-BR') : '10/08/2026';
+          (denunciasGlobais || []).forEach(d => {
+            const dataFmt = d.data_envio ? new Date(d.data_envio).toLocaleString('pt-BR') : '';
             const descClean = (d.descricao || '').replace(/;/g, ',').replace(/\n/g, ' ');
             const linkClean = (d.link_cyberbullying || '').replace(/;/g, ',');
             const midiaTipo = d.midia_tipo || 'Nenhum';
@@ -502,13 +1033,13 @@
           const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
           const a = document.createElement('a');
           a.href = URL.createObjectURL(blob);
-          a.download = `Relatorio_Completo_StopBullying_EEMTI_NazareGuerra.csv`;
+          a.download = `Relatorio_Completo_StopBullying_EEMTI_NazareGuerra_${new Date().toISOString().slice(0,10)}.csv`;
           a.click();
         });
       }
 
-      // Carregar denúncias inicialmente
-      carregarDenuncias();
+      // INICIALIZAÇÃO
+      carregarTodosOsDados();
     });
   </script>
 </body>

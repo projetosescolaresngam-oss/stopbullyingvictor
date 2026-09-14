@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS alertas_sos (
 
 -- ================================================================
 -- POLÍTICAS DE SEGURANÇA POR LINHA (ROW LEVEL SECURITY - RLS)
+-- Permissões completas para o projeto escolar com cliente anônimo
 -- ================================================================
 
 ALTER TABLE denuncias ENABLE ROW LEVEL SECURITY;
@@ -84,7 +85,7 @@ ALTER TABLE logs_sistema ENABLE ROW LEVEL SECURITY;
 ALTER TABLE triagens_resultado ENABLE ROW LEVEL SECURITY;
 ALTER TABLE alertas_sos ENABLE ROW LEVEL SECURITY;
 
--- Políticas de inserção e leitura pública anônima (anônimos podem inserir e consultar)
+-- 1. Políticas para DENUNCIAS
 DROP POLICY IF EXISTS "Inserir Denúncia Anônima" ON denuncias;
 CREATE POLICY "Inserir Denúncia Anônima" ON denuncias FOR INSERT TO anon, authenticated WITH CHECK (true);
 
@@ -94,23 +95,46 @@ CREATE POLICY "Consultar Denúncia por Protocolo" ON denuncias FOR SELECT TO ano
 DROP POLICY IF EXISTS "Atualizar Status Denúncia" ON denuncias;
 CREATE POLICY "Atualizar Status Denúncia" ON denuncias FOR UPDATE TO anon, authenticated USING (true);
 
+DROP POLICY IF EXISTS "Excluir Denúncia Gestão" ON denuncias;
+CREATE POLICY "Excluir Denúncia Gestão" ON denuncias FOR DELETE TO anon, authenticated USING (true);
+
+-- 2. Políticas para RECLAMACOES_SUGESTOES
 DROP POLICY IF EXISTS "Inserir Sugestão" ON reclamacoes_sugestoes;
 CREATE POLICY "Inserir Sugestão" ON reclamacoes_sugestoes FOR INSERT TO anon, authenticated WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Consultar Sugestões Gestão" ON reclamacoes_sugestoes;
+CREATE POLICY "Consultar Sugestões Gestão" ON reclamacoes_sugestoes FOR SELECT TO anon, authenticated USING (true);
+
+-- 3. Políticas para MATERIAIS_APOIO
 DROP POLICY IF EXISTS "Ler Materiais de Apoio" ON materiais_apoio;
 CREATE POLICY "Ler Materiais de Apoio" ON materiais_apoio FOR SELECT TO anon, authenticated USING (true);
 
+DROP POLICY IF EXISTS "Inserir Material de Apoio" ON materiais_apoio;
+CREATE POLICY "Inserir Material de Apoio" ON materiais_apoio FOR INSERT TO anon, authenticated WITH CHECK (true);
+
+-- 4. Políticas para LOGS_SISTEMA
 DROP POLICY IF EXISTS "Inserir Log de Sistema" ON logs_sistema;
 CREATE POLICY "Inserir Log de Sistema" ON logs_sistema FOR INSERT TO anon, authenticated WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Consultar Logs Gestão" ON logs_sistema;
+CREATE POLICY "Consultar Logs Gestão" ON logs_sistema FOR SELECT TO anon, authenticated USING (true);
+
+-- 5. Políticas para TRIAGENS_RESULTADO
 DROP POLICY IF EXISTS "Inserir Triagem" ON triagens_resultado;
 CREATE POLICY "Inserir Triagem" ON triagens_resultado FOR INSERT TO anon, authenticated WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Consultar Triagens Gestão" ON triagens_resultado;
+CREATE POLICY "Consultar Triagens Gestão" ON triagens_resultado FOR SELECT TO anon, authenticated USING (true);
+
+-- 6. Políticas para ALERTAS_SOS
 DROP POLICY IF EXISTS "Inserir Alerta SOS" ON alertas_sos;
 CREATE POLICY "Inserir Alerta SOS" ON alertas_sos FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Consultar Alerta SOS" ON alertas_sos;
 CREATE POLICY "Consultar Alerta SOS" ON alertas_sos FOR SELECT TO anon, authenticated USING (true);
+
+DROP POLICY IF EXISTS "Atualizar Status SOS Gestão" ON alertas_sos;
+CREATE POLICY "Atualizar Status SOS Gestão" ON alertas_sos FOR UPDATE TO anon, authenticated USING (true);
 
 -- ================================================================
 -- INSERÇÃO DE DADOS INICIAIS DE MATERIAIS DE APOIO (SEED DATA)
@@ -121,4 +145,6 @@ INSERT INTO materiais_apoio (titulo, categoria, conteudo, link_externo, icone) V
 ('CVV - Centro de Valorização da Vida', 'Emergência', 'Atendimento emocional gratuito e confidencial 24 horas por dia por telefone ou chat.', 'tel:188', '📞'),
 ('Lei Federal nº 13.185/2015', 'Legislação', 'Institui o Programa de Combate à Intimidação Sistemática (Bullying) em todo o território nacional. A lei exige medidas de prevenção e assistência nas escolas.', 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13185.htm', '⚖️'),
 ('Disque 100 - Direitos Humanos', 'Emergência', 'Canal oficial do governo federal para denúncias de violações de direitos de crianças e adolescentes. Gratuito e anônimo.', 'tel:100', '🛡️'),
-('Dicas para Testemunhas de Bullying', 'Prevenção', 'Não seja um espectador silencioso. Apoie a vítima, não ria de agressões e denuncie anonimamente no app StopBullying.', '', '🤝');
+('Dicas para Testemunhas de Bullying', 'Prevenção', 'Não seja um espectador silencioso. Apoie a vítima, não ria de agressões e denuncie anonimamente no app StopBullying.', '', '🤝')
+ON CONFLICT DO NOTHING;
+
