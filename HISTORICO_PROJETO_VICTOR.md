@@ -122,5 +122,13 @@ Geração do relatório geral do projeto (
 RELATORIO_PROJETO.md
 ).
 Atualização da documentação para refletir o modo Pac-Man em substituição ao antigo modo calculadora.
-Sessão 7 — 14/08/2026 (ID: d00d80e9-1e73-460d-acf9-20c7fc780b61 - Atual)
+Sessão 7 — 14/08/2026 (ID: d00d80e9-1e73-460d-acf9-20c7fc780b61)
 Solicitação e extração filtrada do histórico de conversas exclusivo do Projeto Victor.
+
+Sessão 8 — 23/09/2026 (ID: `84a23c52-8427-488d-93e5-6cf0334e299c`)
+Reformulação executiva do Painel de Gestão da EEMTI Nazaré Guerra:
+- Implementação de módulo de Business Intelligence com **6 gráficos analíticos interativos em Chart.js** (Tipologia de agressões em Doughnut, Mapa de locais na escola, Linha do tempo de notificações, Status do acolhimento pedagógico, Semáforo do Bullying e Análise de mídias/provas anexadas).
+- Expansão dos KPIs do topo para **8 indicadores executivos em tempo real**.
+- Criação da **Central de Emissão de Relatórios Oficiais em PDF** com diagramação A4 ministerial, cabeçalho da SEDUC-CE / CREDE 07, scorecards, tabelas analíticas zebradas, parecer técnico editável e assinaturas formais da gestão e do orientador Prof. Antonio Victor.
+- Emissão de **Ficha Individual de Atendimento Pedagógico em PDF** para cada protocolo atendido.
+
